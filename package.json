@@ -1,0 +1,69 @@
+{
+	"name": "indexit",
+	"version": "1.0.0",
+	"description": "A small cli app for managing (auto-filling) javascript and/or typescript index files.",
+	"main": "index.js",
+	"author": "Alan <alanscodelog@gmail.com>",
+	"license": "MIT",
+	"bin": "bin/index.js",
+	"repository": {
+		"url": "https://github.com/AlansCodeLog/indexit"
+	},
+	"files": [
+		"src/",
+		"bin/"
+	],
+	"scripts": {
+		"babel:run": "yarn babel-node --config-file ./babel.config.js --extensions \".ts\"",
+		"build:babel": "yarn babel --config-file ./babel.config.js --extensions \".ts\" src --out-dir bin",
+		"build:types": "yarn tsc --declaration",
+		"build:copy": "node -e \"require(\\\"fs\\\").copyFileSync(\\\"./src/index.js\\\", \\\"./bin/index.js\\\")\"",
+		"build": "yarn build:babel && yarn build:copy",
+		"build:watch": "yarn build:babel --watch && yarn build:copy",
+		"lint:eslint": "yarn eslint src/**/*.ts tests/*.ts",
+		"lint:types": "yarn tsc --noEmit --pretty",
+		"lint": "yarn lint:types && yarn lint:eslint",
+		"coverage": "yarn test --coverage",
+		"coverage:watch": "yarn coverage:open && yarn coverage --watch",
+		"coverage:open": "start coverage/lcov-report/index.html",
+		"test": "yarn jest test --no-cache --verbose --runInBand",
+		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --no-cache --verbose --runInBand",
+		"test:inspect-errors": "set INSPECT_ERRORS=true && yarn test",
+		"indexit": "yarn babel:run src/indexit.ts",
+		"indexit:test": "yarn indexit test tests/fixtures/**/* tests/fixtures/ -i **/*expected.ts",
+		"prepare": "yarn build"
+	},
+	"dependencies": {
+		"fast-glob": "^3.1.1",
+		"fs-extra": "^8.1.0",
+		"yargs": "^15.1.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.8.3",
+		"@babel/core": "^7.8.3",
+		"@babel/node": "^7.8.3",
+		"@babel/plugin-proposal-class-properties": "^7.8.3",
+		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
+		"@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+		"@babel/plugin-proposal-optional-chaining": "^7.7.5",
+		"@babel/preset-env": "^7.8.3",
+		"@babel/preset-typescript": "^7.8.3",
+		"@types/chai": "^4.2.7",
+		"@types/fs-extra": "^8.0.1",
+		"@types/jest": "^24.0.25",
+		"@types/node": "^13.1.2",
+		"@types/yargs": "^15.0.0",
+		"@typescript-eslint/eslint-plugin": "^2.12.0",
+		"@typescript-eslint/parser": "^2.12.0",
+		"babel-jest": "^24.9.0",
+		"babel-plugin-module-resolver": "^4.0.0",
+		"chai": "^4.2.0",
+		"eslint": "^6.8.0",
+		"eslint-import-resolver-typescript": "^2.0.0",
+		"eslint-plugin-import": "^2.19.1",
+		"jest": "^24.9.0",
+		"jest-watch-typeahead": "^0.4.2",
+		"ts-jest": "^24.0.0",
+		"typescript": "^3.7.5"
+	}
+}
