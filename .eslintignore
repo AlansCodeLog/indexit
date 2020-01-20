@@ -1,0 +1,5 @@
+bin
+node_module
+tests/fixtures
+**/index.expected.ts
+src/index.js
