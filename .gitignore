@@ -2,3 +2,4 @@ node_modules
 bin
 *.log
 coverage
+package-lock.json

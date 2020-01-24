@@ -24,10 +24,8 @@ export function get_updated_contents(indexes: Index): ProcessedItems[]{
 				let already_folder = false
 				if (item.exported_as.includes(EXPORTED_TYPE.FOLDER_W_NAMED)) {
 					already_folder = true
-					if (entry.export_as.includes(EXPORT_TYPE.DEFAULT)) {
-						contents.push(`import * as ${item.name} from "${import_path}"`)
-					}
-					contents.push(`export * as ${item.name} from "${import_path}"`)
+					contents.push(`import * as _${item.name} from "${import_path}"`)
+					contents.push(`export const ${item.name} = _${item.name}`)
 				}
 				if (
 					item.exported_as.includes(EXPORTED_TYPE.DEFAULT)
