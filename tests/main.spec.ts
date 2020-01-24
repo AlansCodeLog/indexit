@@ -8,7 +8,7 @@ it("test command (and therefore update) works (in theory)", async () => {
 	let stdout = await indexit("test tests/fixtures/**/* tests/fixtures/ -i **/*expected.ts".split(" ")) as [string, string][]
 
 	stdout.forEach(([filepath, contents]: [string, string]) => {
-		let expected_filepath = filepath.replace("index", "index.expected")
+		let expected_filepath = filepath.replace("index.ts", "index.expected.ts")
 		let exists = fs.statSync(expected_filepath)
 		expect(!!exists).to.equal(true)
 		if (exists) {
