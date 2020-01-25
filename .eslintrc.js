@@ -8,7 +8,7 @@ module.exports = {
 	"env": {
 		"node": true,
 		"es6": true,
-		"jest":true
+		"jest": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -29,48 +29,56 @@ module.exports = {
 				"alwaysTryTypes": true
 			},
 		},
-		"import/ignore": ["node_modules"]
+		"import/ignore": [ "node_modules" ]
 	},
-	"ignorePatterns":["jest.config.js"],
+	"ignorePatterns": [ "jest.config.js", "babel.config.js" ],
 	"rules": {
 		// "import/no-cycle":"warn",
 		"quote-props": [ "warn", "as-needed", {
 			"unnecessary": true
-		}],
+		} ],
 		"import/order": [ "warn", {
+			"pathGroups": [
+				{
+					"pattern": "@/**",
+					"group": "internal"
+				},
+			],
 			"groups": [
-				"index",
-				"sibling",
-				"parent",
-				"internal",
+				"builtin",
 				"external",
-				"builtin"
+				[
+					"parent",
+					"sibling",
+					"index",
+				],
+				"internal",
 			],
 			"newlines-between": "always"
-		}],
+		} ],
 		"import/no-unresolved": "warn",
 		"import/no-useless-path-segments": [ "warn", {
 			"noUselessIndex": true,
-		}],
+		} ],
 		"no-restricted-imports": [ "warn", {
-			"patterns": ["../*"]
-		}],
+			"patterns": [ "../*" ]
+		} ],
 		"no-console": process.env.NODE_ENV === "production" ? "error" : "off",
 		"no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
 		"quotes": [ "warn", "double", {
 			avoidEscape: false, // use backticks instead
 			allowTemplateLiterals: true,
-		}],
+		} ],
 		"comma-dangle": [ "warn", {
 			arrays: "always-multiline",
 			objects: "always-multiline",
 			imports: "always-multiline",
 			exports: "always-multiline",
 			functions: "always-multiline",
-		}],
+		} ],
 		"no-multiple-empty-lines": [ "warn", {
-				max: 2, maxEOF: 1, maxBOF: 0
-		}],
+			max: 2, maxEOF: 1, maxBOF: 0
+		} ],
 		"no-tabs": "off",
 		"@typescript-eslint/adjacent-overload-signatures": "warn",
 		"@typescript-eslint/array-type": "warn",
@@ -82,7 +90,7 @@ module.exports = {
 			overrides: {
 				parameterProperties: "off",
 			},
-		}],
+		} ],
 		"indent": "off",
 		"@typescript-eslint/indent": [ "warn", "tab", {
 			SwitchCase: 1,
@@ -102,9 +110,9 @@ module.exports = {
 				// allows first line of if to be indented
 				"BinaryExpression"
 			]
-		}],
+		} ],
 		"@typescript-eslint/interface-name-prefix": "off",
-		"@typescript-eslint/member-delimiter-style": ["warn",{
+		"@typescript-eslint/member-delimiter-style": [ "warn", {
 			multiline: {
 				delimiter: "none",
 				requireLast: true,
@@ -113,13 +121,13 @@ module.exports = {
 				delimiter: "semi",
 				requireLast: false,
 			},
-		}],
+		} ],
 		"@typescript-eslint/member-ordering": "off",
 		"@typescript-eslint/no-empty-function": "warn",
 		// so mixin interfaces arent complained about
 		"@typescript-eslint/no-empty-interface": [ "warn", {
 			"allowSingleExtends": true
-		}],
+		} ],
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-misused-new": "warn",
 		"@typescript-eslint/no-namespace": "off",
@@ -135,27 +143,27 @@ module.exports = {
 		// 	"double",
 		// 	"backtick"
 		// ],
-		"@typescript-eslint/semi": [ "warn", "never",],
-		"@typescript-eslint/space-within-parens": [ "off", "never"],
+		"@typescript-eslint/semi": [ "warn", "never", ],
+		"@typescript-eslint/space-within-parens": [ "off", "never" ],
 		"@typescript-eslint/triple-slash-reference": "warn",
 		"@typescript-eslint/type-annotation-spacing": "warn",
 		"@typescript-eslint/unified-signatures": "warn",
 		"arrow-body-style": "warn",
-		"arrow-parens": ["off", "as-needed"],
+		"arrow-parens": [ "off", "as-needed" ],
 		"@typescript-eslint/class-name-casing": "warn",
 		"camelcase": "off", // todo check for vrsource plugin update to handle my style
 		"capitalized-comments": "off",
 		"complexity": "off",
 		"constructor-super": "warn",
-		"curly": [ "warn", "multi-line",],
+		"curly": [ "warn", "multi-line", ],
 		"object-curly-spacing": [ "warn", "always", {
-				objectsInObjects: true,
-				arraysInObjects: false,
-		}],
+			objectsInObjects: true,
+			arraysInObjects: false,
+		} ],
 		"array-bracket-spacing": [ "warn", "never", {
-				objectsInArrays: false,
-				arraysInArrays: false,
-		}],
+			objectsInArrays: false,
+			arraysInArrays: false,
+		} ],
 		"dot-notation": "warn",
 		"eol-last": "warn",
 		"eqeqeq": [ "off", "always" ],
@@ -165,7 +173,7 @@ module.exports = {
 		// "import/order": "warn",
 		"no-duplicate-imports": [ "warn", {
 			"includeExports": false
-		}],
+		} ],
 		"max-classes-per-file": "off",
 		"max-len": "off",
 		"max-lines": [
@@ -186,90 +194,42 @@ module.exports = {
 		"no-new-wrappers": "warn",
 		"no-sequences": "warn",
 		"no-shadow": [ "warn", {
-				hoist: "all",
-		}],
+			hoist: "all",
+		} ],
 		"no-template-curly-in-string": "warn",
 		"no-throw-literal": "warn",
 		"no-trailing-spaces": [ "warn", {
 			skipBlankLines: true,
-		}],
+		} ],
 		"no-undef-init": "warn",
 		"no-underscore-dangle": "off",
 		"no-unsafe-finally": "warn",
 		"no-unused-expressions": [ "warn", {
 			allowTernary: true
-		}],
+		} ],
 		"no-unused-labels": "warn",
 		"no-unused-vars": "off",
 		"@typescript-eslint/no-unused-vars": [ "warn", {
 			vars: "all",
 			args: "after-used",
 			ignoreRestSiblings: false,
-		}],
+		} ],
 		"no-var": "warn",
 		"object-shorthand": "warn",
-		"one-var": [ "off", "never"],
+		"one-var": [ "off", "never" ],
 		// "prefer-arrow/prefer-arrow-functions": "warn",
 		"prefer-const": "off",
 		"@typescript-eslint/prefer-readonly": "warn",
 		"radix": "warn",
 		"space-before-function-paren": [ "warn", {
-				anonymous: "never",
-				asyncArrow: "always",
-				// "constructor": "never",
-				// "method": "never",
-				named: "never",
-		}],
+			anonymous: "never",
+			asyncArrow: "always",
+			// "constructor": "never",
+			// "method": "never",
+			named: "never",
+		} ],
 		"spaced-comment": "warn",
 		"use-isnan": "warn",
 		"valid-typeof": "off",
-		// "@typescript-eslint/tslint/config": [
-		// 	"error",
-		// 	{
-		// 		"rules": {
-		// 			"import-blacklist": true,
-		// 			"import-spacing": true,
-		// 			"jsdoc-format": true,
-		// 			"no-inferred-empty-object-type": true,
-		// 			"no-reference-import": true,
-		// 			"no-tautology-expression": true,
-		// 			"one-line": [
-		// 				true,
-		// 				"check-catch",
-		// 				"check-else",
-		// 				"check-finally",
-		// 				"check-open-brace",
-		// 				"check-whitespace"
-		// 			],
-		// 			"prefer-switch": [
-		// 				true,
-		// 				{
-		// 					"min-cases": 2
-		// 				}
-		// 			],
-		// 			"switch-final-break": true,
-		// 			"typedef": [
-		// 				true,
-		// 				"call-signature",
-		// 				"property-declaration",
-		// 				"member-variable-declaration"
-		// 			],
-		// 			"whitespace": [
-		// 				true,
-		// 				"check-branch",
-		// 				"check-decl",
-		// 				"check-operator",
-		// 				"check-module",
-		// 				"check-separator",
-		// 				"check-rest-spread",
-		// 				"check-type",
-		// 				"check-typecast",
-		// 				"check-type-operator",
-		// 				"check-preblock",
-		// 				"check-postbrace"
-		// 			]
-		// 		}
-		// 	}
-		// ]
 	},
 }
