@@ -1,6 +1,7 @@
+import path from "path"
+
 import fs from "fs-extra"
 
-import path from "path"
 
 import { is_folder } from "@/helpers"
 import { Options, Index, Item, EXPORTED_TYPE, EXPORT_TYPE, ITEM_TYPE, DeepPartialObj, OnlyRequire } from "@/types"
@@ -60,8 +61,9 @@ export async function create_item(options: Options, known_indexes: string[], ind
 	let as_named
 	if (item.type == ITEM_TYPE.FOLDER) {
 		as_named = contents.match(/^export {[\s\S]*?}/g)
-		if (as_named)
-		{push_if_not_exist(item.exported_as, EXPORTED_TYPE.FOLDER_W_NAMED)}
+		if (as_named) {
+			push_if_not_exist(item.exported_as, EXPORTED_TYPE.FOLDER_W_NAMED)
+		}
 	}
 	if (!item.name) {
 		let parsed = path.parse(item.path)

@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-expressions */
 
+import yargs from "yargs"
+
 import { Options, TEST_TYPE } from "./types"
 import { main } from "./main"
 
-import yargs from "yargs"
 
 const IS_TESTING = process?.env?.NODE_ENV == "test"
 
