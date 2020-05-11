@@ -37,7 +37,11 @@ Note: Options are case insensitive.
 
 ## Possible Options and Implications
 
-The only options are Named and Default.
+All the options: `Named`, `Default`, `Ignore`
+
+### Named and Default
+
+These two options determine exports are generated and how that files is re-exported as a folder if it is.
 
 Note that named exports won't always create exports that look like: `export {named} from "..."`.
 
@@ -71,6 +75,19 @@ export default {
 	sibling_named
 }
 ```
+### Ignore
+
+Occasionally you might not want a nested folder to get re-exported in it's parent:
+
+```
+root/src
+└──helpers
+	└── x
+```
+
+For example, say we divided our helpers into different folders. You wouldn't want to import a function from `x` through `helpers`, since it can't be tree shaken (afaik) because helpers re-exports the entirety of `x` (regardless of it's export type).
+
+If `x` uses the `Ignore` option, helpers won't re-export it.
 
 # How it Works
 

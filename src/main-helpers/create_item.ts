@@ -83,25 +83,44 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		let matched = false
 		contents.replace(header_opts_regex, (match: string, group_opts: string) => {
 			if (group_opts) {
-				let opts = group_opts.split(",").map(option => option.trim().toLowerCase())
-				if (opts.includes("named")) {
-					entry.export_as.push(EXPORT_TYPE.NAMED)
-				}
-				if (opts.includes("default")) {
-					entry.export_as.push(EXPORT_TYPE.DEFAULT)
+				let opts = group_opts.split(",").map(option => option.trim().toUpperCase())
+				for (let opt of opts) {
+					switch (opt) {
+						case EXPORT_TYPE.NAMED: {
+							push_if_not_exist(entry.export_as, EXPORT_TYPE.NAMED)
+						} break
+						case EXPORT_TYPE.DEFAULT: {
+							push_if_not_exist(entry.export_as, EXPORT_TYPE.DEFAULT)
+						} break
+						case EXPORT_TYPE.IGNORE: {
+							push_if_not_exist(entry.export_as, EXPORT_TYPE.IGNORE)
+						} break
+						default: {
+							throw new Error(`Unknown Option ${opt}. Allowed options are: Named, Default, and Ignore (case does not matter).`)
+						}
+					}
 				}
 			}
+
 			matched = true
 			return match
 		})
-		if (entry.export_as.length == 0)
-		{entry.export_as.push(EXPORT_TYPE.NAMED)}
+
+		if (entry.export_as.filter(type => type !== EXPORT_TYPE.IGNORE).length == 0) {
+			entry.export_as.push(EXPORT_TYPE.NAMED)
+		}
+
 		if (entry.export_as.includes(EXPORT_TYPE.DEFAULT)) {
 			item.exported_as = [EXPORTED_TYPE.DEFAULT]
 		}
 		if (entry.export_as.includes(EXPORT_TYPE.NAMED)) {
 			item.exported_as = [EXPORTED_TYPE.FOLDER_W_NAMED]
 		}
+		if (entry.export_as.includes(EXPORT_TYPE.IGNORE)) {
+			item.exported_as.push(EXPORTED_TYPE.IGNORE)
+		}
+
+
 		if (matched) {
 			let start_i_match = contents.match(new RegExp(rg_start))
 			let end_i_match = contents.match(new RegExp(rg_end))

@@ -12,6 +12,7 @@ export function get_updated_contents(indexes: Index): ProcessedItems[]{
 		let contents = []
 		let default_contents = ["export default {"]
 		for (let item of entry.items) {
+			if (item.exported_as.includes(EXPORTED_TYPE.IGNORE)) continue
 
 			let item_path = item.type == ITEM_TYPE.FILE
 				? item.path
