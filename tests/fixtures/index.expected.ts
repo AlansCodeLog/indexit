@@ -26,11 +26,11 @@ export const sibling_default_unnamed = _sibling_default_unnamed
 import _sibling_default_unnamed_function from "./sibling_default_unnamed_function"
 export const sibling_default_unnamed_function = _sibling_default_unnamed_function
 
-import * as sibling_folder from "./sibling_folder"
-export * as sibling_folder from "./sibling_folder"
+import * as _sibling_folder from "./sibling_folder"
+export const sibling_folder = _sibling_folder
 
-import * as sibling_folder_manual from "./sibling_folder_manual"
-export * as sibling_folder_manual from "./sibling_folder_manual"
+import * as _sibling_folder_manual from "./sibling_folder_manual"
+export const sibling_folder_manual = _sibling_folder_manual
 
 import { sibling_named } from "./sibling_named"
 export { sibling_named } from "./sibling_named"
