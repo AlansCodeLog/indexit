@@ -1,4 +1,4 @@
-import { remove_index_files_to, push_to_parent } from "@/helpers"
+import { remove_index_files_to, push_to_parent, debug } from "@/helpers"
 import { get_updated_contents, write_or_log_depending_on, process_options, find_paths, create_item, clean_indexes } from "@/main-helpers"
 import { RawOptions, Options, Index, ExtraOptions } from "@/types"
 
