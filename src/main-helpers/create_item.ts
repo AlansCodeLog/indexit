@@ -42,7 +42,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 	{item.parent = full_parent}
 	let contents = (await fs.readFile(item.path)).toString()
 	// https://regexr.com/4s9ol
-	contents.replace(/^export (?:async )?(const|function|let|default function(?!\s*?\()|default (?!function\s*?\())(?!\n)\s*?((?!\{)\S+?)($|<|\(|\s)/gm, (match: string, group_type: string, group_name: string) => {
+	contents.replace(/^export (?:async )?(class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|<|\(|\s)/gm, (match: string, group_type: string, group_name: string) => {
 		item.name = group_name
 
 		if (group_type.includes("default")) {
@@ -55,7 +55,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		}
 		return match
 	})
-	let as_default = contents.match(/(^export default {|^export default function\s*?\()/gm)
+	let as_default = contents.match(/(^export default {|^export default function .*?\(|^export default class .*?\{)/gm)
 	if (as_default) push_if_not_exist(item.exported_as, EXPORTED_TYPE.DEFAULT)
 	let as_named
 	if (item.type == ITEM_TYPE.FOLDER) {

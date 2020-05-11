@@ -1,3 +1,3 @@
-export default function named_function() {
+export default function named_function<T>() {
 
 }

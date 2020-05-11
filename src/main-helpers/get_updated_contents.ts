@@ -19,14 +19,15 @@ export function get_updated_contents(indexes: Index): ProcessedItems[]{
 			let import_path = `./${path.relative(path.dirname(filepath), item_path).replace(/(.*)\..*/, "$1")}`
 
 			if (entry.export_as.includes(EXPORT_TYPE.NAMED)) {
+
 				let already_default = false
 				let already_folder = false
 				if (item.exported_as.includes(EXPORTED_TYPE.FOLDER_W_NAMED)) {
 					already_folder = true
-					contents.push(`export * as ${item.name} from "${import_path}"`)
 					if (entry.export_as.includes(EXPORT_TYPE.DEFAULT)) {
 						contents.push(`import * as ${item.name} from "${import_path}"`)
 					}
+					contents.push(`export * as ${item.name} from "${import_path}"`)
 				}
 				if (
 					item.exported_as.includes(EXPORTED_TYPE.DEFAULT)
@@ -43,10 +44,10 @@ export function get_updated_contents(indexes: Index): ProcessedItems[]{
 						console.warn(`This item, ${item.name} is already exported as default. Also exporting as named would create a conflict`)
 					}
 					if (!already_folder) {
-						contents.push(`export { ${item.name} } from "${import_path}"`)
 						if (entry.export_as.includes(EXPORT_TYPE.DEFAULT)) {
 							contents.push(`import { ${item.name} } from "${import_path}"`)
 						}
+						contents.push(`export { ${item.name} } from "${import_path}"`)
 					}
 				}
 				contents.push("")

@@ -14,24 +14,32 @@ export const named_function = _named_function
 import _named_var from "./sibling_default_named_var"
 export const named_var = _named_var
 
+import { sibling_class } from "./sibling_class"
+export { sibling_class } from "./sibling_class"
+
+import _sibling_class_unnamed from "./sibling_class_unnamed"
+export const sibling_class_unnamed = _sibling_class_unnamed
+
 import _sibling_default_unnamed from "./sibling_default_unnamed"
 export const sibling_default_unnamed = _sibling_default_unnamed
 
 import _sibling_default_unnamed_function from "./sibling_default_unnamed_function"
 export const sibling_default_unnamed_function = _sibling_default_unnamed_function
 
-export * as sibling_folder from "./sibling_folder"
 import * as sibling_folder from "./sibling_folder"
+export * as sibling_folder from "./sibling_folder"
 
-export * as sibling_folder_manual from "./sibling_folder_manual"
 import * as sibling_folder_manual from "./sibling_folder_manual"
+export * as sibling_folder_manual from "./sibling_folder_manual"
 
-export { sibling_named } from "./sibling_named"
 import { sibling_named } from "./sibling_named"
+export { sibling_named } from "./sibling_named"
 
 export default {
 	named_function,
 	named_var,
+	sibling_class,
+	sibling_class_unnamed,
 	sibling_default_unnamed,
 	sibling_default_unnamed_function,
 	sibling_folder,
