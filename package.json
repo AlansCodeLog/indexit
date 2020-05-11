@@ -15,7 +15,7 @@
 	],
 	"scripts": {
 		"babel:run": "yarn babel-node --config-file ./babel.config.js --extensions \".ts\"",
-		"build:babel": "node node_modules/@babel/cli/bin/babel.js --config-file ./babel.config.js --extensions \".ts\" src --out-dir bin",
+		"build:babel": "yarn babel --config-file ./babel.config.js --extensions \".ts\" src --out-dir bin",
 		"build:types": "yarn tsc --declaration",
 		"build:copy": "node -e \"require(\\\"fs\\\").copyFileSync(\\\"./src/index.js\\\", \\\"./bin/index.js\\\")\"",
 		"build": "yarn build:babel && yarn build:copy",
