@@ -1,4 +1,4 @@
-import { ExtraOptions , RawOptions, Options } from "@/types"
+import type { ExtraOptions, Options, RawOptions } from "@/types"
 
 /**
  * Extracts the options we use internally from the options processed by yargs (because yargs will keep flag aliases).

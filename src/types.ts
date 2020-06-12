@@ -42,7 +42,10 @@ export type Item = {
 	exported_as: EXPORTED_TYPE[]
 }
 
-export type ProcessedItems = { path: string; contents: string }
+export type ProcessedItems = {
+	path: string
+	contents: string
+}
 
 export enum TEST_TYPE {
 	TEST = "TEST",
@@ -76,4 +79,4 @@ export type DeepPartialObj<T> = {
 	[P in keyof T]?: DeepPartialObj<T[P]> | T[P];
 }
 
-export type OnlyRequire<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>
+export type OnlyRequire<T, TKey extends keyof T> = Pick<T, TKey> & Partial<Omit<T, TKey>>

@@ -1,4 +1,6 @@
+*.log*
+/*lock*
+.vscode
 node_modules
-bin
-*.log
 coverage
+bin

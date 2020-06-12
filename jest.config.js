@@ -1,14 +1,17 @@
-// For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-const babelConfig = require("./babel.config")
+// maps the path aliases correctly
+const tsc = require("typescript")
+const tsconfig = tsc.readConfigFile("tsconfig.json", tsc.sys.readFile);
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const moduleNameMapper = pathsToModuleNameMapper(tsconfig.config.compilerOptions.paths, { prefix: '<rootDir>/' })
 
-let from_dist = false
-// @ts-ignore
-babelConfig.plugins[ 0 ][ 1 ].alias[ "@" ] = from_dist ? "./dist" : "./src"
 
 module.exports = {
 	preset: "ts-jest",
+	// this will remove jsdom, which has an issue with node 10 (https://github.com/jsdom/jsdom/issues/2961)
+	// it also makes tests faster
+	testEnvironment: "node",
 	moduleFileExtensions: [
 		"ts",
 		"js",
@@ -21,9 +24,7 @@ module.exports = {
 	transformIgnorePatterns: [
 		"/node_modules/"
 	],
-	moduleNameMapper: {
-		"^@/(.*)$": "<rootDir>/src/$1"
-	},
+	moduleNameMapper,
 	testMatch: [
 		"**/tests/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
 	],
@@ -34,14 +35,17 @@ module.exports = {
 	],
 	globals: {
 		"ts-jest": {
-			babelConfig,
+			babelConfig: true,
 			diagnostics: false,
 		}
 	},
 	collectCoverageFrom: [
 		"**/src/**/*.ts",
-		"!**/debug**",
 		"!**/node_modules/**",
+	],
+	coveragePathIgnorePatterns: [
+		".*?/helpers/debug.ts",
+		".*?/index.ts",
 	],
 	coverageDirectory: "coverage",
 };
