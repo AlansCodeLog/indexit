@@ -15,6 +15,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		original_path: item_path,
 		parent: undefined,
 		name: undefined,
+		export_name: undefined,
 		exported_as: [] as any,
 		type: undefined,
 	}
@@ -28,6 +29,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 			let parent_path = path.dirname(path.dirname(item.path))
 			item.parent = `${parent_path}/`
 			item.name = /.*\/(.*?)\/index/.exec(item.path)![1]
+			item.export_name = item.name
 		} else {
 			return
 		}
@@ -35,15 +37,26 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		item.type = ITEM_TYPE.FILE
 		item.parent = `${path.parse(item.path).dir}/`
 	}
+
+	let item_dir_path = item.type === ITEM_TYPE.FILE
+		? item.path
+		: path.dirname(item.path)
+
+	item.import_path = `./${path.parse(item_dir_path).name}`
+
 	let full_parent = known_indexes.find(known_path => known_path.includes(`${item.parent!}index`))
 	if (full_parent !== undefined) { item.parent = full_parent }
 	let contents = (await fs.readFile(item.path)).toString()
+	// detects manual named exports
 	// https://regexr.com/4s9ol
-	contents.replace(/^export (?:async )?(class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|<|\(|\s)/gm, (match: string, group_type: string, group_name: string) => {
-		item.name = group_name
-
-		if (group_type.includes("default")) {
-			push_if_not_exist(item.exported_as, EXPORTED_TYPE.NAMED_DEFAULT)
+	contents.replace(/^export (?:async )?(class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|<|\(|\s)/m, (match: string, group_type: string, group_name: string) => {
+		let type = group_type.trim()
+		if (item.type !== ITEM_TYPE.FOLDER) {
+			item.name = group_name.trim()
+			item.export_name = item.name
+		}
+		if (type.includes("default")) {
+			push_if_not_exist(item.exported_as, EXPORTED_TYPE.DEFAULT)
 		} else {
 			push_if_not_exist(item.exported_as, item.type === ITEM_TYPE.FOLDER
 				? EXPORTED_TYPE.FOLDER_W_NAMED
@@ -51,34 +64,44 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		}
 		return match
 	})
+
+	// detects manual default and re-exported named exports
 	let as_default = contents.match(/(^export default {|^export default function .*?\(|^export default class .*?\{)/gm)
-	if (as_default) push_if_not_exist(item.exported_as, EXPORTED_TYPE.DEFAULT)
-	let as_named
-	if (item.type === ITEM_TYPE.FOLDER) {
-		as_named = contents.match(/^export {[\s\S]*?}/g)
-		if (as_named) {
-			push_if_not_exist(item.exported_as, EXPORTED_TYPE.FOLDER_W_NAMED)
-		}
+	if (as_default !== null) push_if_not_exist(item.exported_as, EXPORTED_TYPE.DEFAULT)
+	let as_named = contents.match(/^export {[\s\S]*?}/g)
+	if (as_named !== null) {
+		push_if_not_exist(item.exported_as, EXPORTED_TYPE.NAMED)
 	}
-	if (!item.name) {
+
+	// if we still haven't found a name, set it to the file name
+	if (item.name === undefined) {
 		let parsed = path.parse(item.path)
 		let file_name = parsed.name
 		item.name = file_name
 	}
+
 	if (item.type === ITEM_TYPE.FOLDER) {
 		let dir = item.path
-		if (!indexes[dir]) {indexes[dir] = { items: [], export_as: [], contents } as any}
+		if (!indexes[dir]) {
+			indexes[dir] = { items: [], export_as: [], contents } as any
+		}
+
 		let entry = indexes[dir]!
 		entry.contents = contents
+		// find header
 		let rg_start = escape_regex(options.tag.start)
 			.replace(/\\\[OPTIONS\\\]\s*/, "(?:\\[(.*?)\\])?\\s*?")
 		let rg_end = escape_regex(options.tag.end)
 		let rg = `${rg_start}[\\s\\S]*?${rg_end}`
 		let header_opts_regex = new RegExp(rg, "gm")
-		let matched = false
+
+		// parse options
+		let matched = false as boolean
 		contents.replace(header_opts_regex, (match: string, group_opts: string) => {
-			if (group_opts) {
-				let opts = group_opts.split(",").map(option => option.trim().toUpperCase())
+			if (group_opts !== undefined) {
+				let opts = group_opts.split(",")
+					.map(option => option.trim().toUpperCase())
+					.filter(option => option !== "")
 				for (let opt of opts) {
 					switch (opt) {
 						case EXPORT_TYPE.NAMED: push_if_not_exist(entry.export_as, EXPORT_TYPE.NAMED); break
@@ -90,7 +113,6 @@ export async function create_item(options: Options, known_indexes: string[], ind
 					}
 				}
 			}
-
 			matched = true
 			return match
 		})

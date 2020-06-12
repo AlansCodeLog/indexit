@@ -11,7 +11,7 @@ export async function find_paths(options: Options): Promise<string[]> {
 		ignore: [...options.ignore, "node_modules"],
 		absolute: true,
 		markDirectories: true, // adds slash at end
-		onlyFiles: false, // also inclused directories
+		onlyFiles: false, // also includes directories
 	}
 	let matches = await glob(options.globs, {
 		...glob_opts,

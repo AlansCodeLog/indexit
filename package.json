@@ -24,6 +24,7 @@
 		"test:inspect-errors": "set INSPECT_ERRORS=true && npx test",
 
 		"indexit": "npm run babel:run src/indexit.ts --",
+		"gen:exports": "npm run indexit update",
 
 		"audit:prod": "yarn audit --groups dependencies",
 		"prepare": "npm run build"
