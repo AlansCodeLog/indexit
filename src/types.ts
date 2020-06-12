@@ -9,6 +9,10 @@ export type Options = {
 	}
 	force: boolean | string
 	extensions: string[]
+	sort: SortEntry[]
+	newlines: number
+	section_newlines: number
+	spaces: number | undefined
 	// glob_opts: glob.Options
 } & ExtraOptions
 
@@ -17,10 +21,44 @@ export type ExtraOptions = {
 	type: TEST_TYPE
 }
 
-export type RawOptions<T> = T & {
+export type RawOptions<T> = Omit<T, "sort" | "section_newlines" | "wildcard_exports"> & {
 	_: string
 	$0: string
 	[key: string]: unknown
+	sort: (
+		| "origin-folder-file"
+		| "origin-file-folder"
+		| "anyname-asc"
+		| "anyname-desc"
+		| "name-asc"
+		| "name-desc"
+		| "filename-asc"
+		| "filename-desc"
+	)[]
+	"section-newlines": number
+	spaces: typeof NaN
+}
+
+export type SortEntry =
+	| {
+		type: SORT_MAIN.NAME | SORT_MAIN.FILENAME | SORT_MAIN.ANYNAME
+		order: SORT_ORDER_NAME
+	}
+	| {
+		type: SORT_MAIN.ORIGIN
+		order: ITEM_TYPE[]
+	}
+
+export enum SORT_MAIN {
+	ORIGIN = "ORIGIN",
+	NAME = "NAME",
+	ANYNAME = "ANYNAME",
+	FILENAME = "FILENAME",
+}
+
+export enum SORT_ORDER_NAME {
+	ASC = "ASC",
+	DESC = "DESC"
 }
 
 export type Index = {
@@ -37,7 +75,9 @@ export type Item = {
 	parent: string
 	path: string
 	original_path: string
+	import_path: string
 	name: string
+	export_name: string | undefined
 	type: ITEM_TYPE
 	exported_as: EXPORTED_TYPE[]
 }

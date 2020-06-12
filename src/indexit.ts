@@ -13,6 +13,11 @@ enum ALIASES {
 	TAG_END = "te",
 	FORCE = "f",
 	EXTENSIONS = "x",
+	NEWLINES = "n",
+	SPACES = "s",
+	SECTION_NEWLINES = "N",
+	// ORDER = "O",
+	SORT = "S",
 }
 
 const IS_TESTING = process.env?.NODE_ENV === "test"
@@ -105,5 +110,48 @@ function add_options(yargs: yargs.Argv<Options>): void {
 			type: "array",
 			default: ["ts", "js"],
 			description: "Array of extensions files can be. By default both typescript and javascript files are included: ts, js. The order defines which file to use if there are two files with the same name.",
+		})
+		.option("newlines", {
+			alias: ALIASES.NEWLINES,
+			type: "number",
+			default: 1,
+			description: "How many newlines to put between each named export. Exports that require more than one line to be exported (because e.g. they require to be imported first) never have a line between them.",
+		})
+		.option("section-newlines", {
+			alias: ALIASES.SECTION_NEWLINES,
+			type: "number",
+			default: 2,
+			description: "How many newlines to put between each export section.",
+		})
+		.option("spaces", {
+			alias: ALIASES.SPACES,
+			type: "number",
+			default: undefined,
+			description: "Use this number of spaces instead of tabs for default exports.",
+		})
+		.option("sort", {
+			alias: ALIASES.SORT,
+			type: "array",
+			default: [
+				"origin-folder-file",
+				"anyname-asc",
+				// "name-asc",
+				// "filename-asc",
+			],
+			description:
+					`A list of "properties" exports can be sorted by (within their export section).
+
+					The default is: \`--sort origin-folder-file anyname-asc\`
+
+					This means exports are sorted first by whether they come from folders or files, then within those two by their names, either the name of the export or the name of the file/folder if it has no export name.
+
+					When sorting by any of the name options, the name is used to sort by, regardless of whether the name is actually used in the export, e.g. \`export * from "..."\`.
+
+					Note that some combinations of these options (because not every entry is definitively before/after another) could potentially cause variances between runs.
+
+					origin-[folder-file/file-folder]
+					anyname-[asc/desc]
+					name-[asc/desc] - Unlike anyname, exports without a name are sorted last instead of using their filename. Note this is only for exports, folders always have names.
+					filename-[asc/desc]`.replace(/\t+/g, ""),
 		})
 }

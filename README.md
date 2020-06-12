@@ -97,10 +97,13 @@ root/src
 └──helpers
 	└── x
 ```
-
 For example, say we divided our helpers into different folders. You wouldn't want to import a function from `x` through `helpers`, since it can't be tree shaken (afaik) because helpers re-exports the entirety of `x` (regardless of it's export type).
 
 If `x` uses the `Ignore` option, helpers won't re-export it.
+
+## CLI Options
+
+The program also provides a few other useful options to control the output (e.g. `--sort`, `--spaces`, `--newlines`, etc). Run `indexit test --help` for details.
 
 # How it Works
 
@@ -120,8 +123,10 @@ I have taken care that `async` and any weird characters in function names are co
 
 Currently the following regex is used to extract the portion with the name: https://regexr.com/4s9ol (you can see the names by using the list and inputting `$2\n`).
 
-# Todos
+## Todos
 
 - [ ] Error Handling if we can't write file.
 - [ ] Warn when an index file matches a glob but no tag was detected.
 - [ ] Option when using test to only print out the parts between the start/end tags.
+- [ ] Tests for sort and formatting options.
+- [ ] Tests for start/end tag handling.
