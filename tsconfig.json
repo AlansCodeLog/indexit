@@ -1,37 +1,27 @@
+// https://www.typescriptlang.org/tsconfig/
 {
+	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
+	// https://github.com/AlansCodeLog/my-tsconfigs
+	"extends": "@alanscodelog/tsconfigs",
 	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
-		"strict": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": false, // eslint will still complain softly
-		"noImplicitReturns": true,
-		"importHelpers": true,
-		"moduleResolution": "node",
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"sourceMap": true,
 		"baseUrl": ".",
-		"noEmit": true,
-		"types": [
-			"jest",
-			"node",
-		],
 		"paths": {
-			"@/*": [
-				"src/*"
-			],
+			"@/*": [ "src/*" ],
+			"@utils/*": [ "node_modules/@alanscodelog/utils/dist/*" ],
 		},
-		"lib": [
-			"esnext",
-		]
 	},
+	"types" : [
+		"node",
+		"jest",
+	],
+	"lib": [
+		"esnext",
+	],
 	"include": [
 		"src/**/*.ts",
-		"tests/*.ts",
+		"tests/**/*.ts",
 	],
 	"exclude": [
-		"tests/fixture/**/*.ts",
-		"node_modules"
+		"tests/fixtures/**/*.ts",
 	]
 }

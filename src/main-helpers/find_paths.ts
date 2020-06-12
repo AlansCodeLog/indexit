@@ -1,6 +1,6 @@
 import glob from "fast-glob"
 
-import { Options } from "@/types"
+import type { Options } from "@/types"
 
 /**
  * Returns all the files matching the glob.
