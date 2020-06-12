@@ -75,6 +75,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 		if (!indexes[dir])
 		{indexes[dir] = { items: [], export_as: [], contents } as any}
 		let entry = indexes[dir]
+		entry.contents = contents
 		let rg_start = escape_regex(options.tag.start)
 			.replace(/\\\[OPTIONS\\\]\s*/, "(?:\\[(.*?)\\])?\\s*?")
 		let rg_end = escape_regex(options.tag.end)
