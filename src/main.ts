@@ -1,5 +1,5 @@
+import { clean_indexes, create_item, find_paths, get_updated_contents, process_options, write_or_log_depending_on } from "@/functions"
 import { push_to_parent, remove_index_files_to } from "@/helpers"
-import { clean_indexes, create_item, find_paths, get_updated_contents, process_options, write_or_log_depending_on } from "@/main-helpers"
 import type { ExtraOptions, Index, Options, RawOptions } from "@/types"
 
 

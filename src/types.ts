@@ -7,9 +7,11 @@ export type Options = {
 		start: string
 		end: string
 	}
+	wildcard_exports: boolean
 	force: boolean | string
 	extensions: string[]
 	sort: SortEntry[]
+	order: SORT_ORDER_EXPORT[]
 	newlines: number
 	section_newlines: number
 	spaces: number | undefined
@@ -21,7 +23,7 @@ export type ExtraOptions = {
 	type: TEST_TYPE
 }
 
-export type RawOptions<T> = Omit<T, "sort" | "section_newlines" | "wildcard_exports"> & {
+export type RawOptions<T> = Omit<T, "sort" | "order" | "section_newlines" | "wildcard_exports"> & {
 	_: string
 	$0: string
 	[key: string]: unknown
@@ -35,6 +37,8 @@ export type RawOptions<T> = Omit<T, "sort" | "section_newlines" | "wildcard_expo
 		| "filename-asc"
 		| "filename-desc"
 	)[]
+	order: ("named" | "default" | "types")[]
+	"wildcard-exports": boolean
 	"section-newlines": number
 	spaces: typeof NaN
 }
@@ -60,6 +64,9 @@ export enum SORT_ORDER_NAME {
 	ASC = "ASC",
 	DESC = "DESC"
 }
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type SORT_ORDER_EXPORT = Exclude<EXPORT_TYPE, EXPORT_TYPE.IGNORE>
 
 export type Index = {
 	[key: string]: {
@@ -95,16 +102,20 @@ export enum TEST_TYPE {
 export enum EXPORTED_TYPE {
 	NAMED = "NAMED",
 	DEFAULT = "DEFAULT",
-	NAMED_DEFAULT = "NAMED_DEFAULT",
-	FOLDER_W_NAMED = "FOLDER_W_NAMED",
 	IGNORE = "IGNORE",
+	TYPES = "TYPES",
 }
 
+// note dashes are used in the string version since we use the values to match against the options directly
 export enum EXPORT_TYPE {
 	NAMED = "NAMED",
+	NAMED_UNWRAPPED = "NAMED-UNWRAPPED",
 	DEFAULT = "DEFAULT",
 	IGNORE = "IGNORE",
+	TYPES = "TYPES",
+	TYPES_NAMESPACED = "TYPES-NAMESPACED",
 }
+
 export enum ITEM_TYPE {
 	FILE = "FILE",
 	FOLDER = "FOLDER",
