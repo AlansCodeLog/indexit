@@ -27,7 +27,6 @@ export { SomeClass } from "./some_class"
 export { default as SomeClassNamed } from "./some_default_named_class"
 export { SomeClassWGenerics } from "./some_class_w_generics"
 
-
 export * from "./folder_types"
 export * from "./folder_types_both"
 export * from "./folder_types_namespaced"

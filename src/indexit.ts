@@ -121,13 +121,13 @@ function add_options(yargs: yargs.Argv<Options>): void {
 		.option("newlines", {
 			alias: ALIASES.NEWLINES,
 			type: "number",
-			default: 1,
+			default: 0,
 			description: "How many newlines to put between each named export. Exports that require more than one line to be exported (because e.g. they require to be imported first) never have a line between them.",
 		})
 		.option("section-newlines", {
 			alias: ALIASES.SECTION_NEWLINES,
 			type: "number",
-			default: 2,
+			default: 1,
 			description: "How many newlines to put between each export section.",
 		})
 		.option("spaces", {

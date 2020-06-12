@@ -10,7 +10,6 @@ import { SomeClass } from "./some_class"
 import SomeClassNamed from "./some_default_named_class"
 import { SomeClassWGenerics } from "./some_class_w_generics"
 
-
 export default {
 	named,
 	named_default,

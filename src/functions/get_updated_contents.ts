@@ -93,7 +93,7 @@ export function get_updated_contents(indexes: Index, options: Options): Processe
 			if (contents[_][contents[_].length - 1] === flexible_line) contents[_].splice(contents[_].length - 1, 1)
 			contents[_] = contents[_].map((line, i) =>
 				i !== contents[_].length - 1 && line === flexible_line
-					? "\n".repeat(options.newlines)
+					? "\n".repeat(options.newlines + 1)
 				: line)
 		})
 
