@@ -16,8 +16,9 @@ enum ALIASES {
 	NEWLINES = "n",
 	SPACES = "s",
 	SECTION_NEWLINES = "N",
-	// ORDER = "O",
+	ORDER = "O",
 	SORT = "S",
+	WILDCARD = "w"
 }
 
 const IS_TESTING = process.env?.NODE_ENV === "test"
@@ -99,6 +100,12 @@ function add_options(yargs: yargs.Argv<Options>): void {
 			default: "",
 			description: "Determines the end of the managed index. If nothing is passed, it's assumed you want the end to be the end of the file.",
 		})
+		.option("wildcard-exports", {
+			alias: ALIASES.WILDCARD,
+			type: "boolean",
+			default: true,
+			description: "If your compiler does not support the `export * as x from \"x\"` syntax, pass --no-wildcard-exports so exports get imported with a wildcard then re-exported as a workaround.",
+		})
 		.option("force <extension>", {
 			alias: ALIASES.FORCE,
 			type: "string",
@@ -128,6 +135,15 @@ function add_options(yargs: yargs.Argv<Options>): void {
 			type: "number",
 			default: undefined,
 			description: "Use this number of spaces instead of tabs for default exports.",
+		})
+		.option("order", {
+			alias: ALIASES.ORDER,
+			type: "array",
+			default: [
+				"named", "default", "types",
+			],
+			description:
+				`Determines the order of the export type "sections" of the index file, by default it's: named, default, types. These supersede the sort option.`,
 		})
 		.option("sort", {
 			alias: ALIASES.SORT,
