@@ -92,7 +92,7 @@
 	"license": "MIT",
 	"files": [
 		"src",
-		"dist"
+		"bin"
 	],
 	"eslintIgnore": ["tests/fixtures/**"],
 	"release": { "extends": [ "@alanscodelog/semantic-release-config" ] },
