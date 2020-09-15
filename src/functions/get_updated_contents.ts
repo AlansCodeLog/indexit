@@ -1,3 +1,7 @@
+// temporary until the oldest maintained node version supports flatmap
+// https://node.green/#ES2019-features-Array-prototype--flat--flatMap-
+import "core-js/features/array/flat-map"
+
 import { keys } from "@utils/retypes"
 import path from "path"
 
