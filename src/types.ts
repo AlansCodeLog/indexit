@@ -1,5 +1,3 @@
-// import glob from "fast-glob"
-
 export type Options = {
 	ignore: string[]
 	globs: string[]
