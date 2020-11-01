@@ -1,3 +1,4 @@
+import type { Keys } from "@alanscodelog/utils"
 import { keys } from "@utils/retypes"
 import path from "path"
 
@@ -89,7 +90,8 @@ export function get_updated_contents(indexes: Index, options: Options): Processe
 		if (entry.export_as.includes(EXPORT_TYPE.DEFAULT)) {
 			contents.default.push("}")
 		}
-		keys(contents).forEach(_ => {
+		// TODO not sure why keys isn't typing this correctly, it should
+		(keys(contents) as Keys<typeof contents>).forEach(_ => {
 			if (contents[_][contents[_].length - 1] === flexible_line) contents[_].splice(contents[_].length - 1, 1)
 			contents[_] = contents[_].map((line, i) =>
 				i !== contents[_].length - 1 && line === flexible_line
