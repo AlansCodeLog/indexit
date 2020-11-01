@@ -50,7 +50,6 @@ export function process_options(yargs: RawOptions<Options>, extra: ExtraOptions)
 		tag: yargs.tag,
 		wildcard_exports: yargs["wildcard-exports"],
 		force: yargs["force <extension>"] as boolean | string,
-		extensions: yargs.extensions,
 		sort,
 		order,
 		newlines: yargs.newlines,
