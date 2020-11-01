@@ -16,5 +16,6 @@ export async function find_paths(options: Options): Promise<string[]> {
 	let matches = await glob(options.globs, {
 		...glob_opts,
 	})
+
 	return matches
 }

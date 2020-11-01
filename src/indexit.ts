@@ -12,7 +12,6 @@ enum ALIASES {
 	TAG_START = "ts",
 	TAG_END = "te",
 	FORCE = "f",
-	EXTENSIONS = "x",
 	NEWLINES = "n",
 	SPACES = "s",
 	SECTION_NEWLINES = "N",
@@ -79,8 +78,8 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 function add_options(yargs: yargs.Argv<Options>): void {
 	yargs
 		.positional("globs", {
-			default: ["src/**", "src/"],
-			description: `A series of globs to determine which folders to search in. Be default it searches src/** AND src/ (this is needed, otherwise we can't detect the "root" index).`,
+			default: ["src/**/*.{ts, js}", "src/"],
+			description: `A series of globs to determine which folders to search in. Be default it searches for any js or ts files AND src/ (this is needed, otherwise we can't detect the "root" index).`,
 		})
 		.option("ignore", {
 			alias: ALIASES.IGNORE,
@@ -111,12 +110,6 @@ function add_options(yargs: yargs.Argv<Options>): void {
 			type: "string",
 			default: false,
 			description: "If files match the given glob but their is no sibling index file if this option is set to something (it should be set to the extension you want the generated indexes to have), the program will pretend there is one with the default options.",
-		})
-		.option("extensions", {
-			alias: ALIASES.EXTENSIONS,
-			type: "array",
-			default: ["ts", "js"],
-			description: "Array of extensions files can be. By default both typescript and javascript files are included: ts, js. The order defines which file to use if there are two files with the same name.",
 		})
 		.option("newlines", {
 			alias: ALIASES.NEWLINES,
