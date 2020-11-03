@@ -21,7 +21,7 @@ You can list as many globs as you want: `indexit test glob1/** glob2/** glob3/**
 
 ## Notes
 - If you get no results note that you must use forward slashes `/` for file paths in the glob. Backslashes are only for escaping characters.
-- If you want the indexes at, for example, `glob1` (`glob1/index.js`) to be allowed to be written to you must also add `glob1/` to the globs, otherwise it won't work. This is why the default is `src/** src/`.
+- If you want the indexes at, for example, `glob1` (`glob1/index.js`) to be allowed to be written to you must also add `glob1/` to the globs, otherwise it won't work. This is why the default is `src/**/*.{js,ts} src/`.
 - The `node_modules` directory is always ignored.
 
 To actually write the changes run `indexit update` with the options you tested.
