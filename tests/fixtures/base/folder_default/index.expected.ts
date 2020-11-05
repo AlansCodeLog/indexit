@@ -6,6 +6,7 @@ import some_default from "./some_default"
 import some_default_class from "./some_default_class"
 import { some_function } from "./some_function"
 import { some_function_w_generics } from "./some_function_w_generics"
+import { some_named_w_types } from "./some_named_w_types"
 import { SomeClass } from "./some_class"
 import SomeClassNamed from "./some_default_named_class"
 import { SomeClassWGenerics } from "./some_class_w_generics"
@@ -17,6 +18,7 @@ export default {
 	some_default_class,
 	some_function,
 	some_function_w_generics,
+	some_named_w_types,
 	SomeClass,
 	SomeClassNamed,
 	SomeClassWGenerics,
