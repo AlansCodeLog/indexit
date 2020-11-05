@@ -49,7 +49,7 @@ export async function create_item(options: Options, known_indexes: string[], ind
 	let contents = (await fs.readFile(item.path)).toString()
 	// detects manual named exports
 	// https://regexr.com/4s9ol
-	contents.replace(/^export (?:async )?(type|interface|class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|<|\(|\s)/m, (match: string, group_type: string, group_name: string) => {
+	contents.replace(/^export (?:async )?(type|interface|class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|:|<|\(|\s)/m, (match: string, group_type: string, group_name: string) => {
 		let type = group_type.trim()
 		if (item.type !== ITEM_TYPE.FOLDER) {
 			item.name = group_name.trim()
