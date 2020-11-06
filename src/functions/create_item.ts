@@ -5,11 +5,31 @@ import { is_folder } from "@/helpers"
 import { DeepPartialObj, EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, OnlyRequire, Options } from "@/types"
 import { escape_regex, push_if_not_exist } from "@/utils"
 
+/** Returns the path of an known index if it exists. Prioritizes finding an existing path inside known indexes according to the options path (in particular `extension` and `force`). */
+function find_existing(item_path: string, known: string[], options: Options, use_force: boolean = true): string | undefined {
+	// todo - could be optimized a bit more
+	let existing_start = `${item_path}${use_force && options.force ? options.force : ""}`
+	if (use_force && options.force) {
+		return known.find(index_path => index_path.startsWith(existing_start))
+	} else {
+		let maybe_existing = known.filter(index_path => index_path.startsWith(existing_start))
+
+		if (options.extensions.length > 0) {
+			return maybe_existing.sort((a, b) => {
+				let a_ext = a.match(/.*\.(.*)/)![1]
+				let b_ext = b.match(/.*\.(.*)/)![1]
+				return options.extensions.indexOf(a_ext) - options.extensions.indexOf(b_ext)
+			})[0]
+		} else {
+			return maybe_existing[0]
+		}
+	}
+}
 /**
  * Creates an [[Index]] entry/item or nothing if none should be created.
  * There are some cases where one is return but isn't needed, but those are taken care of by "./clean_indexes.ts"
  */
-export async function create_item(options: Options, known_indexes: string[], indexes: Partial<Index>, item_path: string): Promise<Item | undefined> {
+export async function create_item(options: Options, known_indexes: string[], filtered: string[], indexes: Partial<Index>, item_path: string): Promise<Item | undefined> {
 	let item: DeepPartialObj<Item> & OnlyRequire<Item, "exported_as" | "path"> = {
 		path: item_path,
 		original_path: item_path,
@@ -21,7 +41,8 @@ export async function create_item(options: Options, known_indexes: string[], ind
 	}
 
 	if (is_folder(item_path)) {
-		let existing = known_indexes.find(index_path => index_path.includes(item_path))
+		let existing = find_existing(`${item_path}index`, known_indexes, options)
+
 		if (existing !== undefined) {
 			item.type = ITEM_TYPE.FOLDER
 			item.path = existing
@@ -44,7 +65,14 @@ export async function create_item(options: Options, known_indexes: string[], ind
 
 	item.import_path = `./${path.parse(item_dir_path).name}`
 
-	let full_parent = known_indexes.find(known_path => known_path.includes(`${item.parent!}index`))
+	let exists_with_different_ext = find_existing(item.path.match(/(.*)\..*/)![1], filtered, options, false)
+
+	// ignore file with same name but different (more prioritized extension)
+	if (exists_with_different_ext !== undefined
+		&& item.path !== exists_with_different_ext) return
+
+
+	let full_parent = find_existing(`${item.parent}index`, known_indexes, options)
 	if (full_parent !== undefined) { item.parent = full_parent }
 	let contents = (await fs.readFile(item.path)).toString()
 	// detects manual named exports

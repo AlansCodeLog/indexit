@@ -11,7 +11,7 @@ import { indexit } from "@/indexit"
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 describe("test command (and therefore update) works (in theory)", () => {
 	it("works", async () => {
-		let commands = await glob(`tests/fixtures/**/*.txt`, { absolute: true })
+		let commands = await glob(`tests/fixtures/**/command.txt`, { absolute: true })
 		expect(commands.length).to.be.greaterThan(0)
 		return Promise.all(commands.map(async command_file => {
 			let dir = path.dirname(command_file)
@@ -21,20 +21,24 @@ describe("test command (and therefore update) works (in theory)", () => {
 
 			let stdout = await indexit(command.split(" ")) as [string, string][]
 			await Promise.all(stdout.map(async ([filepath, contents]: [string, string]) => {
-				let expected_filepath = filepath.replace("index.ts", "index.expected.ts")
+				let expected_filepath = filepath.replace(/index\.(.*?)/, "index.expected.$1")
 				let exists = await fs.stat(expected_filepath).then(() => true).catch(() => false)
+				let not_expected_exists = await fs.stat(expected_filepath).then(() => true).catch(() => false)
 
-				expect(!!exists).to.equal(true)
+				expect(!!exists).to.equal(true, `${filepath
+					} found but missing: ${expected_filepath}`)
+
 				if (exists) {
 					let expected_contents = (await fs.readFile(expected_filepath)).toString()
 
 					// filepath is here for debugging purposes, it won't match if the contents don't match so we can quickly find it when debugging
-					expect({ filepath, contents }).to.deep.equal({ filepath: contents === expected_contents ? filepath : "Ignore, this will not error if the contents match.", contents: expected_contents })
+					expect({ filepath, expected_filepath, contents }).to.deep.equal({
+						filepath: contents === expected_contents ? filepath : "Ignore, this properties will not error if the contents match.",
+						expected_filepath: contents === expected_contents ? expected_filepath : "Ignore, this properties will not error if the contents match.",
+						contents: expected_contents,
+					})
 				}
-			})).catch(e => {
-				console.log(`${name} (${command})`)
-				throw e
-			})
+			}))
 		}))
 	})
 })

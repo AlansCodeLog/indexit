@@ -7,6 +7,7 @@ export type Options = {
 	}
 	wildcard_exports: boolean
 	force: boolean | string
+	extensions: string[]
 	sort: SortEntry[]
 	order: SORT_ORDER_EXPORT[]
 	newlines: number
