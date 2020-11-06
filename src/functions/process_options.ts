@@ -44,12 +44,20 @@ export function process_options(yargs: RawOptions<Options>, extra: ExtraOptions)
 	if (yargs.spaces !== undefined && yargs.spaces < 0) throw new Error("spaces option cannot be less than 0.")
 	if (yargs["section-newlines"] < 0) throw new Error("section-newlines option cannot be less than 0.")
 
+	if (yargs.force === true) {
+		throw new Error("force option must specify extension to use (`--force .js` or `--force js`) for the index file.")
+	}
+	if (typeof yargs.force === "string" && !yargs.force.startsWith(".")) {
+		yargs.force = `.${yargs.force}`
+	}
+
 	return {
 		ignore: yargs.ignore,
 		globs: yargs.globs,
 		tag: yargs.tag,
 		wildcard_exports: yargs["wildcard-exports"],
-		force: yargs["force <extension>"] as boolean | string,
+		force: yargs.force as string,
+		extensions: yargs.extensions,
 		sort,
 		order,
 		newlines: yargs.newlines,

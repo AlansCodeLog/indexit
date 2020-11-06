@@ -1,0 +1,1 @@
+export const namedts = "named"

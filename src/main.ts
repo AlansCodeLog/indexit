@@ -18,7 +18,7 @@ export const main = (extra_options: ExtraOptions, test_return: { value: any }) =
 
 	await Promise.all(filtered
 		.map(async item_path => {
-			let item = await create_item(options, known_indexes, indexes, item_path)
+			let item = await create_item(options, known_indexes, filtered, indexes, item_path)
 			push_to_parent(item, indexes)
 		}))
 
