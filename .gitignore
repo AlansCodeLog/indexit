@@ -1,6 +1,7 @@
-*.log*
-/*lock*
+**/*.log*
+*lock*
 .vscode
 node_modules
 coverage
+
 bin
