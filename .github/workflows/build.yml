@@ -34,7 +34,10 @@ jobs:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: ${{ runner.os }}-node-${{ matrix.node }}-yarn-
-    - run: "echo Yarn Cache Hit: ${{ steps.yarn-cache.outputs.cache-hit != 'true'}}"
+
+    - run: "echo Cache Key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}"
+    - run: "echo Cache Restore-Keys: ${{ runner.os }}-node-${{ matrix.node }}-yarn-"
+    - run: "echo Yarn Cache Hit: ${{ steps.yarn-cache.outputs.cache-hit }}"
 
     - name: Setting Up Node.js (${{ matrix.node-version }})
       uses: actions/setup-node@v1
@@ -46,7 +49,7 @@ jobs:
     - run: yarn install --frozen-lockfile
       if: "env.USE_LOCKFILE == 'true'"
 
-    - run: yarn install
+    - run: yarn install --no-lockfile
       if: "env.USE_LOCKFILE == 'false'"
 
     - run: yarn build
