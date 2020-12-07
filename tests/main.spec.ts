@@ -5,7 +5,7 @@ import glob from "fast-glob"
 import fsSync, { promises as fs } from "fs"
 import path from "path"
 
-import { indexit } from "@/indexit"
+import { indexit } from "@/index"
 
 
 describe("test command (and therefore update) works (in theory)", () => {

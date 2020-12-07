@@ -3,7 +3,7 @@ import { expect } from "chai"
 
 
 describe(test_name(), () => {
-	it("no tests", () => {
-		expect(true).to.equal(true)
+	it("missing tests", () => {
+		expect(true).to.equal(false)
 	})
 })

@@ -7,7 +7,7 @@
 		"babel:run": "npx babel-node --extensions \".ts,.js\" --",
 
 		"build:babel": "npx babel --extensions \".ts,.js\" src --out-dir bin --source-maps inline",
-		"build:watch": "npm run build:babel --watch",
+		"build:watch": "npm run build:babel -- --watch",
 		"build:clean": "rm -rf bin && npm run build",
 		"build": "npm run build:babel && npm run build:shebang",
 		"build:shebang": "node -e \"const fs = require('fs'); fs.writeFileSync('./bin/index.js', '#!/usr/bin/env node\\n' + fs.readFileSync('./bin/index.js'))\"",
@@ -27,7 +27,7 @@
 		"indexit": "npm run babel:run src/indexit.ts --",
 		"gen:exports": "npm run indexit update",
 
-		"actions:debug": "act -r -j build-only",
+		"actions:debug": "act -r -v -j build-only",
 
 		"audit:prod": "yarn audit --level moderate --groups dependencies",
 
@@ -42,7 +42,9 @@
 	"dependencies": {
 		"@alanscodelog/utils": "beta",
 		"fast-glob": "^3.2.4",
-		"yargs": "^16.1.1"
+		"yargs": "^16.1.1",
+
+		"core-js": "^3.8.0"
 	},
 	"devDependencies": {
 		"@types/node": "14.14.10",
@@ -67,7 +69,6 @@
 		"@babel/plugin-proposal-class-properties": "^7.12.1",
 		"babel-plugin-module-resolver": "^4.0.0",
 		"@alanscodelog/babel-preset": "^1.0.4",
-		"core-js": "^3.8.0",
 
 		"eslint": "^7.15.0",
 		"eslint-import-resolver-typescript": "^2.3.0",
@@ -86,7 +87,7 @@
 		"@types/jest": "^26.0.16",
 
 		"typescript": "^4.1.2",
-		"@alanscodelog/tsconfigs": "^2.1.2",
+		"@alanscodelog/tsconfigs": "^2.2.1",
 
 		"husky": "^4.3.4",
 		"onchange": "^7.1.0",
@@ -113,6 +114,6 @@
 			"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
 		}
 	},
-	"TEMPLATE:4df5c37": "Ignore. Commit of the template this was created with / last updated to."
+	"TEMPLATE:5588fac": "Ignore. Commit of the template this was created with / last updated to."
 }
 
