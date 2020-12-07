@@ -30,7 +30,6 @@ module.exports = {
 		"!**/node_modules/**",
 	],
 	coveragePathIgnorePatterns: [
-		".*?/helpers/debug.ts",
 		".*?/index.ts",
 	],
 	coverageDirectory: "coverage",

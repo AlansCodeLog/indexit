@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-unused-expressions */
 
 import yargs from "yargs"
 
@@ -18,7 +17,7 @@ enum ALIASES {
 	SECTION_NEWLINES = "N",
 	ORDER = "O",
 	SORT = "S",
-	WILDCARD = "w"
+	WILDCARD = "w",
 }
 
 const IS_TESTING = process.env?.NODE_ENV === "test"
