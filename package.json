@@ -12,7 +12,7 @@
 		"build": "npm run build:babel && npm run build:shebang",
 		"build:shebang": "node -e \"const fs = require('fs'); fs.writeFileSync('./bin/index.js', '#!/usr/bin/env node\\n' + fs.readFileSync('./bin/index.js'))\"",
 
-		"lint:eslint": "npx eslint --max-warnings=0 --report-unused-disable-directives",
+		"lint:eslint": "npx eslint \"{src,tests}/**/*.{js,ts}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "npx tsc --noEmit --pretty",
 		"lint:commits": "npx commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
 		"lint": "npm run lint:types && npm run lint:eslint",
@@ -73,6 +73,7 @@
 		"eslint-import-resolver-typescript": "^2.3.0",
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-simple-import-sort": "^6.0.1",
+		"eslint-plugin-jsdoc": "^30.7.8",
 		"@typescript-eslint/eslint-plugin": "^4.9.0",
 		"@typescript-eslint/parser": "^4.9.0",
 		"@alanscodelog/eslint-config": "beta",

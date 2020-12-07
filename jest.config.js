@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 // https://jestjs.io/docs/en/configuration.html
 
 
