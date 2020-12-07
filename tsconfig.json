@@ -8,6 +8,8 @@
 		"paths": {
 			"@/*": [ "src/*" ],
 			"@utils/*": [ "node_modules/@alanscodelog/utils/dist/*" ],
+			// only for tests, not transpiled by babel preset
+			"@tests/*": ["tests/*"],
 		},
 	},
 	"types" : [

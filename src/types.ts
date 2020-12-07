@@ -60,21 +60,19 @@ export enum SORT_MAIN {
 
 export enum SORT_ORDER_NAME {
 	ASC = "ASC",
-	DESC = "DESC"
+	DESC = "DESC",
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type SORT_ORDER_EXPORT = Exclude<EXPORT_TYPE, EXPORT_TYPE.IGNORE>
 
-export type Index = {
-	[key: string]: {
-		export_as: EXPORT_TYPE[]
-		items: Item[]
-		start: number
-		end: number
-		contents: string
-	}
-}
+export type Index = Record<string, {
+	export_as: EXPORT_TYPE[]
+	items: Item[]
+	start: number
+	end: number
+	contents: string
+}>
 
 export type Item = {
 	parent: string

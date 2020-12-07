@@ -8,7 +8,6 @@ import path from "path"
 import { indexit } from "@/indexit"
 
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 describe("test command (and therefore update) works (in theory)", () => {
 	it("works", async () => {
 		let commands = await glob(`tests/fixtures/**/command.txt`, { absolute: true })
