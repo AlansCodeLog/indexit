@@ -5,15 +5,15 @@ export type Options = {
 		start: string
 		end: string
 	}
-	wildcard_exports: boolean
+	wildcardExports: boolean
 	force: boolean | string
 	extensions: string[]
 	sort: SortEntry[]
 	order: SORT_ORDER_EXPORT[]
 	newlines: number
-	section_newlines: number
+	sectionNewlines: number
 	spaces: number | undefined
-	// glob_opts: glob.Options
+	// globOpts: glob.Options
 } & ExtraOptions
 
 export type ExtraOptions = {
@@ -21,7 +21,7 @@ export type ExtraOptions = {
 	type: TEST_TYPE
 }
 
-export type RawOptions<T> = Omit<T, "sort" | "order" | "section_newlines" | "wildcard_exports"> & {
+export type RawOptions<T> = Omit<T, "sort" | "order" | "sectionNewlines" | "wildcardExports"> & {
 	_: string
 	$0: string
 	[key: string]: unknown
@@ -67,7 +67,7 @@ export enum SORT_ORDER_NAME {
 export type SORT_ORDER_EXPORT = Exclude<EXPORT_TYPE, EXPORT_TYPE.IGNORE>
 
 export type Index = Record<string, {
-	export_as: EXPORT_TYPE[]
+	exportAs: EXPORT_TYPE[]
 	items: Item[]
 	start: number
 	end: number
@@ -77,12 +77,12 @@ export type Index = Record<string, {
 export type Item = {
 	parent: string
 	path: string
-	original_path: string
-	import_path: string
+	originalPath: string
+	importPath: string
 	name: string
-	export_name: string | undefined
+	exportName: string | undefined
 	type: ITEM_TYPE
-	exported_as: EXPORTED_TYPE[]
+	exportedAs: EXPORTED_TYPE[]
 }
 
 export type ProcessedItems = {

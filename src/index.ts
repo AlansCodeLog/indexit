@@ -36,7 +36,7 @@ if (!IS_TESTING) {
  */
 export async function indexit(args?: string[]): Promise<void | string[][]> {
 	// when testing, lets us return to the test what would normally be console.logged
-	let test_return: { value: undefined | string[][] } = { value: undefined }
+	const testReturn: { value: undefined | string[][] } = { value: undefined }
 	// record the promise main returns, because otherwise yargs won't wait for it
 	let promise: Promise<void | string[][]> | undefined
 
@@ -49,14 +49,14 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 		.command(
 			"update [globs...]",
 			"create/update indexes",
-			add_options as any,
-			yargs => { promise = main({ testing: IS_TESTING, type: TEST_TYPE.UPDATE }, test_return)(yargs as any) },
+			addOptions as any,
+			yargs => { promise = main({ testing: IS_TESTING, type: TEST_TYPE.UPDATE }, testReturn)(yargs as any) },
 		)
 		.command(
 			"test [globs...]",
 			"print out the new contents of the indexes without touching the files",
-			add_options as any,
-			yargs => { promise = main({ testing: IS_TESTING, type: TEST_TYPE.TEST }, test_return)(yargs as any) },
+			addOptions as any,
+			yargs => { promise = main({ testing: IS_TESTING, type: TEST_TYPE.TEST }, testReturn)(yargs as any) },
 		)
 		.help()
 		.argv
@@ -70,12 +70,12 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 	})
 	if (promise) await promise
 
-	if (test_return.value) return test_return.value
+	if (testReturn.value) return testReturn.value
 }
 
 
 /** Adds shared options. */
-function add_options(yargs: yargs.Argv<Options>): void {
+function addOptions(yargs: yargs.Argv<Options>): void {
 	yargs
 		.positional("globs", {
 			default: ["src/**", "src/"],

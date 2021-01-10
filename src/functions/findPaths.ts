@@ -6,15 +6,15 @@ import type { Options } from "@/types"
  * Returns all the files matching the glob.
  * Sets ignored to the passed ignore option, and adds the node_modules directory just in case.
  */
-export async function find_paths(options: Options): Promise<string[]> {
-	let glob_opts = {
+export async function findPaths(options: Options): Promise<string[]> {
+	const globOpts = {
 		ignore: [...options.ignore, "node_modules"],
 		absolute: true,
 		markDirectories: true, // adds slash at end
 		onlyFiles: false, // also includes directories
 	}
-	let matches = await glob(options.globs, {
-		...glob_opts,
+	const matches = await glob(options.globs, {
+		...globOpts,
 	})
 
 	return matches
