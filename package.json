@@ -24,7 +24,7 @@
 		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --verbose",
 		"test:inspect-errors": "set INSPECT_ERRORS=true && npx test",
 
-		"indexit": "npm run babel:run src/indexit.ts --",
+		"indexit": "npm run babel:run src/index.ts --",
 		"gen:exports": "npm run indexit update",
 
 		"actions:debug": "act -r -v -j build-only",

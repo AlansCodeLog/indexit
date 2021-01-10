@@ -133,6 +133,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 					.map(option => option.trim().toUpperCase())
 					.filter(option => option !== "")
 				if (opts.length === 0) noOptions = true
+
 				for (const opt of opts) {
 					switch (opt) {
 						case EXPORT_TYPE.NAMED: pushIfNotExist(entry.exportAs, EXPORT_TYPE.NAMED); break
