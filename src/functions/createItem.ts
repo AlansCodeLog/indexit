@@ -1,9 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { escapeRegex, pushIfNotIn } from "@utils/utils"
 import { promises as fs } from "fs"
 import path from "path"
 
 import { isFolder } from "@/helpers"
 import { DeepPartialObj, EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, OnlyRequire, Options } from "@/types"
-import { escapeRegex, pushIfNotExist } from "@/utils"
 
 
 /** Returns the path of an known index if it exists. Prioritizes finding an existing path inside known indexes according to the options path (in particular `extension` and `force`). */
@@ -85,9 +86,9 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 			item.exportName = item.name
 		}
 		if (type.includes("default")) {
-			pushIfNotExist(item.exportedAs, EXPORTED_TYPE.DEFAULT)
+			pushIfNotIn(item.exportedAs, EXPORTED_TYPE.DEFAULT)
 		} else {
-			pushIfNotExist(item.exportedAs, type === "type" || type === "interface"
+			pushIfNotIn(item.exportedAs, type === "type" || type === "interface"
 				? EXPORTED_TYPE.TYPES
 				: EXPORTED_TYPE.NAMED)
 		}
@@ -96,10 +97,10 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 
 	// detects manual default and re-exported named exports
 	const asDefault = contents.match(/(^export default {|^export default function .*?\(|^export default class .*?\{)/gm)
-	if (asDefault !== null) pushIfNotExist(item.exportedAs, EXPORTED_TYPE.DEFAULT)
+	if (asDefault !== null) pushIfNotIn(item.exportedAs, EXPORTED_TYPE.DEFAULT)
 	const asNamed = contents.match(/^export {[\s\S]*?}/g)
 	if (asNamed !== null) {
-		pushIfNotExist(item.exportedAs, EXPORTED_TYPE.NAMED)
+		pushIfNotIn(item.exportedAs, EXPORTED_TYPE.NAMED)
 	}
 
 	// if we still haven't found a name, set it to the file name
@@ -121,6 +122,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 		const rgStart = escapeRegex(options.tag.start)
 			.replace(/\\\[OPTIONS\\\]\s*/, "(?:\\[(.*?)\\])?\\s*?")
 		const rgEnd = escapeRegex(options.tag.end)
+
 		const rg = `${rgStart}[\\s\\S]*?${rgEnd}`
 		const headerOptsRegex = new RegExp(rg, "gm")
 
@@ -136,12 +138,12 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 
 				for (const opt of opts) {
 					switch (opt) {
-						case EXPORT_TYPE.NAMED: pushIfNotExist(entry.exportAs, EXPORT_TYPE.NAMED); break
-						case EXPORT_TYPE.NAMED_UNWRAPPED: pushIfNotExist(entry.exportAs, EXPORT_TYPE.NAMED_UNWRAPPED); break
-						case EXPORT_TYPE.DEFAULT: pushIfNotExist(entry.exportAs, EXPORT_TYPE.DEFAULT); break
-						case EXPORT_TYPE.IGNORE: pushIfNotExist(entry.exportAs, EXPORT_TYPE.IGNORE); break
-						case EXPORT_TYPE.TYPES: pushIfNotExist(entry.exportAs, EXPORT_TYPE.TYPES); break
-						case EXPORT_TYPE.TYPES_NAMESPACED: pushIfNotExist(entry.exportAs, EXPORT_TYPE.TYPES_NAMESPACED); break
+						case EXPORT_TYPE.NAMED: pushIfNotIn(entry.exportAs, EXPORT_TYPE.NAMED); break
+						case EXPORT_TYPE.NAMED_UNWRAPPED: pushIfNotIn(entry.exportAs, EXPORT_TYPE.NAMED_UNWRAPPED); break
+						case EXPORT_TYPE.DEFAULT: pushIfNotIn(entry.exportAs, EXPORT_TYPE.DEFAULT); break
+						case EXPORT_TYPE.IGNORE: pushIfNotIn(entry.exportAs, EXPORT_TYPE.IGNORE); break
+						case EXPORT_TYPE.TYPES: pushIfNotIn(entry.exportAs, EXPORT_TYPE.TYPES); break
+						case EXPORT_TYPE.TYPES_NAMESPACED: pushIfNotIn(entry.exportAs, EXPORT_TYPE.TYPES_NAMESPACED); break
 						default: throw new Error(`Unknown Option ${opt} as ${dir}. Allowed options are: Named, Named-Unwrapped, Default, Types, Types-Namespaced, and Ignore (case does not matter).`)
 					}
 				}

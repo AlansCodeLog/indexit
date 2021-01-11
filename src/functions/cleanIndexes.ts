@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { pretty } from "@utils/utils"
+
 import { EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, Options, SORT_MAIN, SORT_ORDER_NAME, SortEntry } from "@/types"
 
 
@@ -9,7 +12,7 @@ export function cleanIndexes(options: Options, indexes: Index): void {
 		entry.items.forEach((item, i) => {
 			if (item.name.match(/^[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*$/) === null) {
 				if (!item.exportedAs.includes(EXPORTED_TYPE.IGNORE)) {
-					throw new Error(`The folder "${item.name}" at ${item.path} is an invalid variable name. Folders that are not ignored or empty must be named as a valid javascript variable.`)
+					throw new Error(`The folder "${item.name}" at ${item.path} is an invalid variable name. Folders that are not ignored or empty must be named as a valid javascript variable. Details:\n${pretty(item)}`)
 				}
 			}
 
