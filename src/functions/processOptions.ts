@@ -5,9 +5,9 @@ import { EXPORT_TYPE, ExtraOptions, ITEM_TYPE, Options, RawOptions, SORT_MAIN, S
  * Extracts the options we use internally from the options processed by yargs (because yargs will keep flag aliases).
  * Additionally there's a few extra options we care about that are not handled by yargs.
  */
-export function process_options(yargs: RawOptions<Options>, extra: ExtraOptions): Options {
-	let sort: Options["sort"] = yargs.sort.map(raw_entry => {
-		switch (raw_entry) {
+export function processOptions(yargs: RawOptions<Options>, extra: ExtraOptions): Options {
+	const sort: Options["sort"] = yargs.sort.map(rawEntry => {
+		switch (rawEntry) {
 			case "origin-folder-file":
 				return { type: SORT_MAIN.ORIGIN, order: [ITEM_TYPE.FOLDER, ITEM_TYPE.FILE]}
 			case "origin-file-folder":
@@ -28,8 +28,8 @@ export function process_options(yargs: RawOptions<Options>, extra: ExtraOptions)
 	})
 
 
-	let order: Options["order"] = yargs.order.map(raw_entry => {
-		switch (raw_entry) {
+	const order: Options["order"] = yargs.order.map(rawEntry => {
+		switch (rawEntry) {
 			case "types": return EXPORT_TYPE.TYPES
 			case "named": return EXPORT_TYPE.NAMED
 			case "default": return EXPORT_TYPE.DEFAULT
@@ -44,18 +44,25 @@ export function process_options(yargs: RawOptions<Options>, extra: ExtraOptions)
 	if (yargs.spaces !== undefined && yargs.spaces < 0) throw new Error("spaces option cannot be less than 0.")
 	if (yargs["section-newlines"] < 0) throw new Error("section-newlines option cannot be less than 0.")
 
+	if (yargs.force === true) {
+		throw new Error("force option must specify extension to use (`--force .js` or `--force js`) for the index file.")
+	}
+	if (typeof yargs.force === "string" && !yargs.force.startsWith(".")) {
+		yargs.force = `.${yargs.force}`
+	}
+
 	return {
 		ignore: yargs.ignore,
 		globs: yargs.globs,
 		tag: yargs.tag,
-		wildcard_exports: yargs["wildcard-exports"],
-		force: yargs["force <extension>"] as boolean | string,
+		wildcardExports: yargs["wildcard-exports"],
+		force: yargs.force as string,
 		extensions: yargs.extensions,
 		sort,
 		order,
 		newlines: yargs.newlines,
 		spaces: isNaN(yargs.spaces) ? undefined : yargs.spaces,
-		section_newlines: yargs["section-newlines"],
+		sectionNewlines: yargs["section-newlines"],
 		type: extra.type,
 		testing: extra.testing,
 	}

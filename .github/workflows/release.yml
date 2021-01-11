@@ -12,12 +12,12 @@ on:
 
 jobs:
   release:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! contains(toJSON(github.event.commits.*.message), '(no-release)')"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         # awaiting https://github.com/actions/setup-node/issues/26 so we can just set this to [lts]
-        # ideally we would trigger a release if the build suceeds on both node version, need to research #future
+        # ideally we would trigger a release if the build succeeds on both node versions, need to research #future
         node-version: [10.x]
 
     steps:
@@ -35,7 +35,10 @@ jobs:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: ${{ runner.os }}-node-${{ matrix.node }}-yarn-
-    - run: "echo Yarn Cache Hit: ${{ steps.yarn-cache.outputs.cache-hit != 'true'}}"
+
+    - run: "echo Cache Key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}"
+    - run: "echo Cache Restore-Keys: ${{ runner.os }}-node-${{ matrix.node }}-yarn-"
+    - run: "echo Yarn Cache Hit: ${{ steps.yarn-cache.outputs.cache-hit }}"
 
     - name: Setting Up Node.js (${{ matrix.node-version }})
       uses: actions/setup-node@v1
@@ -47,7 +50,7 @@ jobs:
     - run: yarn install --frozen-lockfile
       if: "env.USE_LOCKFILE == 'true'"
 
-    - run: yarn install
+    - run: yarn install --no-lockfile
       if: "env.USE_LOCKFILE == 'false'"
 
     - run: yarn build

@@ -8,6 +8,7 @@
 		"paths": {
 			"@/*": [ "src/*" ],
 			"@utils/*": [ "node_modules/@alanscodelog/utils/dist/*" ],
+			"@tests/*": ["tests/*"],
 		},
 	},
 	"types" : [

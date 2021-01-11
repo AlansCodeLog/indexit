@@ -7,11 +7,12 @@
 		"babel:run": "npx babel-node --extensions \".ts,.js\" --",
 
 		"build:babel": "npx babel --extensions \".ts,.js\" src --out-dir bin --source-maps inline",
-		"build:copy": "node -e \"require(\\\"fs\\\").copyFileSync(\\\"./src/index.js\\\", \\\"./bin/index.js\\\")\"",
-		"build:watch": "npm run build:babel --watch",
-		"build": "npm run build:babel && npm run build:copy",
+		"build:watch": "npm run build:babel -- --watch",
+		"build:clean": "rm -rf bin && npm run build",
+		"build": "npm run build:babel && npm run build:shebang",
+		"build:shebang": "node -e \"const fs = require('fs'); fs.writeFileSync('./bin/index.js', '#!/usr/bin/env node\\n' + fs.readFileSync('./bin/index.js'))\"",
 
-		"lint:eslint": "npx eslint \"src/**/*.ts\" \"tests/**/*.ts\" --max-warnings=0",
+		"lint:eslint": "npx eslint \"{src,tests}/**/*.{js,ts}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "npx tsc --noEmit --pretty",
 		"lint:commits": "npx commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
 		"lint": "npm run lint:types && npm run lint:eslint",
@@ -19,14 +20,17 @@
 		"coverage": "npm run test -- --coverage",
 		"coverage:dev": "npx http-server coverage/lcov-report --port=5000 & onchange -k -i \"jest.config.js\" --  npm run coverage -- --watch",
 
-		"test": "npx jest test --verbose --runInBand",
-		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --verbose --runInBand",
+		"test": "npx jest test --verbose",
+		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --verbose",
 		"test:inspect-errors": "set INSPECT_ERRORS=true && npx test",
 
-		"indexit": "npm run babel:run src/indexit.ts --",
+		"indexit": "npm run babel:run src/index.ts --",
 		"gen:exports": "npm run indexit update",
 
-		"audit:prod": "yarn audit --groups dependencies",
+		"actions:debug": "act -r -v -j build-only",
+
+		"audit:prod": "yarn audit --level moderate --groups dependencies",
+
 		"prepare": "npm run build"
 	},
 	"husky": {
@@ -36,55 +40,57 @@
 		}
 	},
 	"dependencies": {
-		"@alanscodelog/utils": "^1.0.1",
-		"fast-glob": "^3.2.2",
-		"yargs": "^15.3.1",
-		"core-js": "^3.6.5"
+		"@alanscodelog/utils": "^2.0.1",
+		"fast-glob": "^3.2.4",
+		"yargs": "^16.1.1",
+
+		"core-js": "^3.8.0"
 	},
 	"devDependencies": {
-		"@types/node": "14.10.2",
+		"@types/node": "14.14.10",
 
-		"semantic-release": "^17.1.1",
+		"semantic-release": "^17.3.0",
 		"@semantic-release/changelog": "^5.0.1",
 		"@semantic-release/commit-analyzer": "^8.0.1",
-		"@semantic-release/github": "^7.1.1",
-		"@semantic-release/npm": "^7.0.6",
+		"@semantic-release/github": "^7.2.0",
+		"@semantic-release/npm": "^7.0.9",
 		"@semantic-release/release-notes-generator": "^9.0.1",
-		"conventional-changelog-conventionalcommits": "^4.4.0",
-		"@alanscodelog/semantic-release-config": "^1.0.1",
-		"@alanscodelog/commitlint-config": "^1.0.1",
+		"conventional-changelog-conventionalcommits": "^4.5.0",
+		"@alanscodelog/semantic-release-config": "^1.0.2",
+		"@alanscodelog/commitlint-config": "^1.0.2",
 		"commitlint": "^11.0.0",
 
-		"@babel/cli": "^7.11.6",
-		"@babel/core": "^7.11.6",
-		"@babel/node": "^7.10.5",
-		"@babel/preset-env": "^7.11.5",
-		"@babel/preset-typescript": "^7.10.4",
-		"@babel/plugin-proposal-export-namespace-from": "^7.10.4",
-		"@babel/plugin-proposal-class-properties": "^7.10.4",
+		"@babel/cli": "^7.12.10",
+		"@babel/core": "^7.12.10",
+		"@babel/node": "^7.12.10",
+		"@babel/preset-env": "^7.12.11",
+		"@babel/preset-typescript": "^7.12.7",
+		"@babel/plugin-proposal-export-namespace-from": "^7.12.1",
+		"@babel/plugin-proposal-class-properties": "^7.12.1",
 		"babel-plugin-module-resolver": "^4.0.0",
-		"@alanscodelog/babel-preset": "^1.0.3",
+		"@alanscodelog/babel-preset": "^1.0.4",
 
-		"eslint": "^7.9.0",
+		"eslint": "^7.17.0",
 		"eslint-import-resolver-typescript": "^2.3.0",
-		"eslint-plugin-import": "^2.22.0",
-		"eslint-plugin-simple-import-sort": "^5.0.3",
-		"@typescript-eslint/eslint-plugin": "^4.1.1",
-		"@typescript-eslint/parser": "^4.1.1",
-		"@alanscodelog/eslint-config": "^1.3.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"eslint-plugin-jsdoc": "^30.7.13",
+		"@typescript-eslint/eslint-plugin": "^4.12.0",
+		"@typescript-eslint/parser": "^4.12.0",
+		"@alanscodelog/eslint-config": "2.0.1",
 
 		"chai": "^4.2.0",
-		"jest": "^26.4.2",
-		"ts-jest": "^26.3.0",
+		"jest": "^26.6.3",
+		"babel-jest": "^26.6.3",
 		"jest-watch-typeahead": "^0.6.1",
-		"@types/chai": "^4.2.12",
-		"@types/jest": "^26.0.14",
+		"@types/chai": "^4.2.14",
+		"@types/jest": "^26.0.20",
 
-		"typescript": "^4.0.2",
-		"@alanscodelog/tsconfigs": "^2.1.1",
+		"typescript": "^4.1.3",
+		"@alanscodelog/tsconfigs": "^2.2.1",
 
-		"husky": "^4.3.0",
-		"onchange": "^7.0.2",
+		"husky": "^4.3.4",
+		"onchange": "^7.1.0",
 		"http-server": "^0.12.3"
 	},
 	"author": "Alan <alanscodelog@gmail.com>",
@@ -103,9 +109,11 @@
 	"@comments": {
 		"scripts": {
 			"lint:commits": "Lints all unpushed commits in the active branch.",
-			"test:inspect_errors":"For use with my inspect_error utility function from @alanscodelog/utils",
-			"prepare": "Needed so that if we pull the package from git it will get built and installed properly."
+			"test:inspect-errors":"For use with my inspectError utility function from @alanscodelog/utils",
+			"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",
+			"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
 		}
-	}
+	},
+	"TEMPLATE:5588fac": "Ignore. Commit of the template this was created with / last updated to."
 }
 
