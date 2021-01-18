@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { keys } from "@utils/retypes"
-import type { Keys } from "@utils/types"
 import path from "path"
 
 import { EXPORT_TYPE, EXPORTED_TYPE, Index, ITEM_TYPE, Options, ProcessedItems } from "@/types"
@@ -9,7 +8,7 @@ import { EXPORT_TYPE, EXPORTED_TYPE, Index, ITEM_TYPE, Options, ProcessedItems }
 /**
  * For each entry in the index, generates the updated contents and returns them all along with where they should be written.
  */
-export function getUpdatedContents(indexes: Index, options: Options): ProcessedItems[] {
+export function getUpdatedContents(indexes: Index, options: Options, paths: string[]): ProcessedItems[] {
 	const allContents = []
 
 	for (const [filepath, entry] of Object.entries(indexes)) {
@@ -22,27 +21,46 @@ export function getUpdatedContents(indexes: Index, options: Options): ProcessedI
 		const flexibleLine = ""
 
 		for (const item of entry.items) {
+			let ext = ""
+			if (options.fileExtensions) {
+				if (item.type === ITEM_TYPE.FILE) {
+					ext = path.parse(item.originalPath).ext
+					// typescript does not support having a ts extension in the path, it must be js
+					if (ext === ".ts") ext = ".js"
+				} else {
+					const folder = paths.find(key => key.startsWith(`${item.originalPath}index`))
+					if (folder === undefined) throw new Error("should never happen")
+					ext = path.parse(folder).ext
+					if (ext === ".ts") ext = ".js"
+					ext = `/index${ext}`.replace(/\\/g, "/")
+				}
+			}
+
+			const importPath = item.importPath + ext
+			console.log(importPath)
+
+
 			if (item.exportedAs.includes(EXPORTED_TYPE.IGNORE)) continue
 
 			if (entry.exportAs.includes(EXPORT_TYPE.TYPES) && item.exportedAs.includes(EXPORTED_TYPE.TYPES)) {
-				contents.types.push(`export * from "${item.importPath}"`)
+				contents.types.push(`export * from "${importPath}"`)
 				contents.types.push(flexibleLine)
 			}
 			if (entry.exportAs.includes(EXPORT_TYPE.TYPES_NAMESPACED) && item.exportedAs.includes(EXPORTED_TYPE.TYPES)) {
-				const name = path.parse(item.importPath).name
-				contents.types.push(`export * as ${name} from "${item.importPath}"`)
+				const name = path.parse(importPath).name
+				contents.types.push(`export type * as ${name} from "${importPath}"`)
 				contents.types.push(flexibleLine)
 			}
 
 			if (entry.exportAs.includes(EXPORT_TYPE.NAMED)) {
 				if (item.exportedAs.includes(EXPORTED_TYPE.NAMED)) {
 					if (item.type === ITEM_TYPE.FILE) {
-						contents.named.push(`export { ${item.name} } from "${item.importPath}"`)
+						contents.named.push(`export { ${item.name} } from "${importPath}"`)
 					} else {
 						if (options.wildcardExports) {
-							contents.named.push(`export * as ${item.name} from "${item.importPath}"`)
+							contents.named.push(`export * as ${item.name} from "${importPath}"`)
 						} else {
-							contents.named.push(`import * as _${item.name} from "${item.importPath}"`)
+							contents.named.push(`import * as _${item.name} from "${importPath}"`)
 							contents.named.push(flexibleLine)
 							contents.named.push(`export const ${item.name} = _${item.name}`)
 						}
@@ -50,17 +68,17 @@ export function getUpdatedContents(indexes: Index, options: Options): ProcessedI
 					contents.named.push(flexibleLine)
 				}
 				if (item.exportedAs.includes(EXPORTED_TYPE.DEFAULT)) {
-					contents.named.push(`export { default as ${item.name} } from "${item.importPath}"`)
+					contents.named.push(`export { default as ${item.name} } from "${importPath}"`)
 					contents.named.push(flexibleLine)
 				}
 			}
 
 			if (entry.exportAs.includes(EXPORT_TYPE.NAMED_UNWRAPPED)) {
 				if (item.exportedAs.includes(EXPORTED_TYPE.NAMED)) {
-					contents.named.push(`export * from "${item.importPath}"`)
+					contents.named.push(`export * from "${importPath}"`)
 					contents.named.push(flexibleLine)
 				} else if (item.exportedAs.includes(EXPORTED_TYPE.DEFAULT)) {
-					contents.named.push(`export { default as ${item.name} } from "${item.importPath}"`)
+					contents.named.push(`export { default as ${item.name} } from "${importPath}"`)
 					contents.named.push(flexibleLine)
 				}
 			}
@@ -70,15 +88,15 @@ export function getUpdatedContents(indexes: Index, options: Options): ProcessedI
 				if (item.exportedAs.includes(EXPORTED_TYPE.NAMED)) {
 					pushed = true
 					if (item.type === ITEM_TYPE.FILE) {
-						contents.defaultImports.push(`import { ${item.name} } from "${item.importPath}"`)
+						contents.defaultImports.push(`import { ${item.name} } from "${importPath}"`)
 					} else {
-						contents.defaultImports.push(`import * as ${item.name} from "${item.importPath}"`)
+						contents.defaultImports.push(`import * as ${item.name} from "${importPath}"`)
 					}
 					contents.defaultImports.push(flexibleLine)
 				}
 				if (item.exportedAs.includes(EXPORTED_TYPE.DEFAULT)) {
 					pushed = true
-					contents.defaultImports.push(`import ${item.name} from "${item.importPath}"`)
+					contents.defaultImports.push(`import ${item.name} from "${importPath}"`)
 					contents.defaultImports.push(flexibleLine)
 				}
 				if (pushed) {
@@ -92,7 +110,7 @@ export function getUpdatedContents(indexes: Index, options: Options): ProcessedI
 			contents.default.push("}")
 		}
 		// TODO not sure why keys isn't typing this correctly, it should
-		(keys(contents) as Keys<typeof contents>).forEach(_ => {
+		(keys(contents)).forEach(_ => {
 			if (contents[_][contents[_].length - 1] === flexibleLine) contents[_].splice(contents[_].length - 1, 1)
 			contents[_] = contents[_].map((line, i) =>
 				i !== contents[_].length - 1 && line === flexibleLine

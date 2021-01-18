@@ -13,6 +13,7 @@ enum ALIASES {
 	TAG_END = "te",
 	FORCE = "f",
 	EXTENSIONS = "x",
+	FILE_EXTENSIONS = "X",
 	NEWLINES = "n",
 	SPACES = "s",
 	SECTION_NEWLINES = "N",
@@ -117,6 +118,12 @@ function addOptions(yargs: yargs.Argv<Options>): void {
 			type: "array",
 			default: ["ts", "js"],
 			description: "Array of extensions files can be. By default both typescript and javascript files are included: ts, js. The order defines which file to use if there are two files with the same name.",
+		})
+		.option("file-extensions", {
+			alias: ALIASES.FILE_EXTENSIONS,
+			type: "boolean",
+			default: false,
+			description: "Whether to add file extensions to the paths. Needed for modern es modules. False by default.",
 		})
 		.option("newlines", {
 			alias: ALIASES.NEWLINES,

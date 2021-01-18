@@ -21,10 +21,10 @@ export const main = (extraOptions: ExtraOptions, testReturn: { value: any }) => 
 			const item = await createItem(options, knownIndexes, filtered, indexes, itemPath)
 			pushToParent(item, indexes)
 		}))
-
+	const uncleanedPaths = Object.keys(indexes)
 	cleanIndexes(options, indexes)
 
-	const contents = getUpdatedContents(indexes, options)
+	const contents = getUpdatedContents(indexes, options, uncleanedPaths)
 
 	testReturn.value = await writeOrLogDependingOn(options, contents)
 	// because the function returns void[]

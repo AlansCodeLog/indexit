@@ -8,6 +8,7 @@ export type Options = {
 	wildcardExports: boolean
 	force: boolean | string
 	extensions: string[]
+	fileExtensions: boolean
 	sort: SortEntry[]
 	order: SORT_ORDER_EXPORT[]
 	newlines: number
@@ -21,7 +22,7 @@ export type ExtraOptions = {
 	type: TEST_TYPE
 }
 
-export type RawOptions<T> = Omit<T, "sort" | "order" | "sectionNewlines" | "wildcardExports"> & {
+export type RawOptions<T> = Omit<T, "sort" | "order" | "sectionNewlines" | "wildcardExports" | "fileExtensions"> & {
 	_: string
 	$0: string
 	[key: string]: unknown
@@ -38,6 +39,7 @@ export type RawOptions<T> = Omit<T, "sort" | "order" | "sectionNewlines" | "wild
 	order: ("named" | "default" | "types")[]
 	"wildcard-exports": boolean
 	"section-newlines": number
+	"file-extensions": boolean
 	spaces: typeof NaN
 }
 
@@ -79,6 +81,7 @@ export type Item = {
 	path: string
 	originalPath: string
 	importPath: string
+	importExt: string
 	name: string
 	exportName: string | undefined
 	type: ITEM_TYPE

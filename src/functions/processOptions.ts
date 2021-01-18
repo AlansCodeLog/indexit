@@ -58,6 +58,7 @@ export function processOptions(yargs: RawOptions<Options>, extra: ExtraOptions):
 		wildcardExports: yargs["wildcard-exports"],
 		force: yargs.force as string,
 		extensions: yargs.extensions,
+		fileExtensions: yargs["file-extensions"],
 		sort,
 		order,
 		newlines: yargs.newlines,
