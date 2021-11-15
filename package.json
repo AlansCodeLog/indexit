@@ -4,40 +4,32 @@
 	"version": "0.0.0-semantically-released",
 	"bin": "bin/index.js",
 	"scripts": {
-		"babel:run": "npx babel-node --extensions \".ts,.js\" --",
+		"babel:run": "babel-node --extensions \".ts,.js\" --",
 
-		"build:babel": "npx babel --extensions \".ts,.js\" src --out-dir bin --source-maps inline",
+		"build:babel": "babel --extensions \".ts,.js\" src --out-dir bin --source-maps inline",
 		"build:watch": "npm run build:babel -- --watch",
 		"build:clean": "rm -rf bin && npm run build",
 		"build": "npm run build:babel && npm run build:shebang",
 		"build:shebang": "node -e \"const fs = require('fs'); fs.writeFileSync('./bin/index.js', '#!/usr/bin/env node\\n' + fs.readFileSync('./bin/index.js'))\"",
 
-		"lint:eslint": "npx eslint \"{src,tests}/**/*.{js,ts}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
-		"lint:types": "npx tsc --noEmit --pretty",
-		"lint:commits": "npx commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
+		"lint:eslint": "eslint \"{src,tests}/**/*.{js,ts}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
+		"lint:types": "tsc --noEmit --pretty",
+		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
 		"lint": "npm run lint:types && npm run lint:eslint",
 
 		"coverage": "npm run test -- --coverage",
-		"coverage:dev": "npx http-server coverage/lcov-report --port=5000 & onchange -k -i \"jest.config.js\" --  npm run coverage -- --watch",
+		"coverage:dev": "http-server coverage/lcov-report --port=5000 & onchange -k -i \"jest.config.js\" --  npm run coverage -- --watch",
 
-		"test": "npx jest test --verbose",
+		"test": "jest test --verbose",
 		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --verbose",
-		"test:inspect-errors": "set INSPECT_ERRORS=true && npx test",
+		"test:inspect-errors": "set INSPECT_ERRORS=true && test",
 
 		"indexit": "npm run babel:run src/index.ts --",
 		"gen:exports": "npm run indexit update",
 
 		"actions:debug": "act -r -v -j build-only",
 
-		"audit:prod": "yarn audit --level moderate --groups dependencies",
-
-		"prepare": "npm run build"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run build && npm run lint && npm run test -- --no-cache",
-			"pre-push": "npm run lint:commits"
-		}
+		"prepare": "npm run build && husky installs"
 	},
 	"dependencies": {
 		"@alanscodelog/utils": "^2.1.0",
