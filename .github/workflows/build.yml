@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         # awaiting https://github.com/actions/setup-node/issues/26 so we can just set this to [lts, latest]
-        node-version: [10.x, 14.x]
+        node-version: [14.x, 17.x]
 
     steps:
 

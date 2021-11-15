@@ -18,7 +18,7 @@ jobs:
       matrix:
         # awaiting https://github.com/actions/setup-node/issues/26 so we can just set this to [lts]
         # ideally we would trigger a release if the build succeeds on both node versions, need to research #future
-        node-version: [10.x]
+        node-version: [14.x]
 
     steps:
 
