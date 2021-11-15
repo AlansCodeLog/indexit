@@ -29,3 +29,8 @@ export { default as SomeClassNamed } from "./some_default_named_class"
 export { SomeClassWGenerics } from "./some_class_w_generics"
 export { SomeNamespace } from "./some_namespace"
 
+export * from "./folder_types"
+export * from "./folder_types_both"
+export * from "./folder_types_namespaced"
+export * from "./some_interface"
+export * from "./some_type"
