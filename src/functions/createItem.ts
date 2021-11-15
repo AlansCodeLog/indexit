@@ -14,7 +14,7 @@ function findExisting(itemPath: string, known: string[], options: Options, useFo
 	if (useForce && options.force) {
 		return known.find(indexPath => indexPath.startsWith(existingStart))
 	} else {
-		const maybeExisting = known.filter(indexPath => indexPath.startsWith(existingStart))
+		const maybeExisting = known.filter(indexPath => existingStart === indexPath.match(/(.*)\..*/)?.[1])
 
 		if (options.extensions.length > 0) {
 			return maybeExisting.sort((a, b) => {
