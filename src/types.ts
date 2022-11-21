@@ -13,6 +13,7 @@ export type Options = {
 	newlines: number
 	sectionNewlines: number
 	spaces: number | undefined
+	outputFormat: (path: string, ext: string) => string
 	// globOpts: glob.Options
 } & ExtraOptions
 
@@ -36,8 +37,12 @@ export type RawOptions<T> = Omit<T, "sort" | "order" | "sectionNewlines" | "wild
 		| "filename-desc"
 	)[]
 	order: ("named" | "default" | "types")[]
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"wildcard-exports": boolean
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"section-newlines": number
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	"output-format": string
 	spaces: typeof NaN
 }
 
@@ -77,6 +82,7 @@ export type Index = Record<string, {
 export type Item = {
 	parent: string
 	path: string
+	ext: string
 	originalPath: string
 	importPath: string
 	name: string

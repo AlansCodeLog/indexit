@@ -1,0 +1,1 @@
+test tests/fixtures/[DIR]/**/* tests/fixtures/[DIR]/ -i **/*expected.ts -o '${path}.js'

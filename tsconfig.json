@@ -3,7 +3,7 @@
 	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
 	// https://github.com/AlansCodeLog/my-tsconfigs
 	"extends": "@alanscodelog/tsconfigs",
-	"compilerOptions": {
+		"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
 			"@/*": [ "src/*" ],
@@ -20,9 +20,10 @@
 	],
 	"include": [
 		"src/**/*.ts",
-		"tests/**/*.ts",
+		"tests/*.ts",
 	],
 	"exclude": [
+		"node_modules",
 		"tests/fixtures/**/*.ts",
 	]
 }

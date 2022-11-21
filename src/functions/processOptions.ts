@@ -1,3 +1,5 @@
+import type { ErrorW } from "@alanscodelog/utils"
+
 import { EXPORT_TYPE, ExtraOptions, ITEM_TYPE, Options, RawOptions, SORT_MAIN, SORT_ORDER_NAME } from "@/types"
 
 
@@ -51,6 +53,33 @@ export function processOptions(yargs: RawOptions<Options>, extra: ExtraOptions):
 		yargs.force = `.${yargs.force}`
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	let outputFormat = (path: string, _ext: string): string => path
+	if (yargs["output-format"] !== undefined) {
+		let func: any
+		let format = yargs["output-format"]
+		if (["\"", "'", "`"].includes(format[0]) && format.endsWith(format[0])) {
+			format = format.slice(1, format.length - 1)
+		}
+
+		try {
+			// eslint-disable-next-line no-eval
+			eval(`func = ${format}`)
+		} catch (e1) {
+			const body = `(path, ext) => \`${format}\``
+			try {
+				// eslint-disable-next-line no-eval
+				eval(`func = ${body}`)
+			} catch (e2) {
+				const err = new Error("Could not parse output-format.") as ErrorW<{ info: any }>
+				err.info = { e1, e2, str1: `(var func = ${format})`, str2: `(var func = ${body})` }
+				throw err
+			}
+		}
+
+		outputFormat = func
+	}
+
 	return {
 		ignore: yargs.ignore,
 		globs: yargs.globs,
@@ -65,5 +94,6 @@ export function processOptions(yargs: RawOptions<Options>, extra: ExtraOptions):
 		sectionNewlines: yargs["section-newlines"],
 		type: extra.type,
 		testing: extra.testing,
+		outputFormat,
 	}
 }

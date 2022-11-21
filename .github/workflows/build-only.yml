@@ -30,18 +30,24 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    # endregion
+
+    - uses: pnpm/action-setup@v2.0.1
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: latest
+    # regionend
 
     # region Steps
-    - run: yarn install --frozen-lockfile
+    - run: pnpm install --frozen-lockfile
       if: "env.USE_LOCKFILE == 'true'"
 
-    - run: yarn install --no-lockfile
+    - run: pnpm install
       if: "env.USE_LOCKFILE == 'false'"
 
-    - run: yarn build
+    - run: pnpm build
 
-    - run: yarn test
+    - run: pnpm lint:eslint # test command will lint types
 
-    - run: yarn doc
-    # endregion
+    - run: pnpm test
+    # regionend

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { escapeRegex, pushIfNotIn } from "@utils/utils"
 import { promises as fs } from "fs"
 import path from "path"
@@ -29,7 +28,7 @@ function findExisting(itemPath: string, known: string[], options: Options, useFo
 }
 /**
  * Creates an [[Index]] entry/item or nothing if none should be created.
- * There are some cases where one is return but isn't needed, but those are taken care of by "./cleanIndexes.ts"
+ * There are some cases where one is returned but isn't needed, but those are taken care of by "./cleanIndexes.ts"
  */
 export async function createItem(options: Options, knownIndexes: string[], filtered: string[], indexes: Partial<Index>, itemPath: string): Promise<Item | undefined> {
 	const item: DeepPartialObj<Item> & OnlyRequire<Item, "exportedAs" | "path"> = {
@@ -40,6 +39,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 		exportName: undefined,
 		exportedAs: [] as any,
 		type: undefined,
+		ext: "",
 	}
 
 	if (isFolder(itemPath)) {
@@ -65,7 +65,8 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 		? item.path
 		: path.dirname(item.path)
 
-	item.importPath = `./${path.parse(itemDirPath).name}`
+	const parsedImportPath = path.parse(itemDirPath)
+	item.importPath = item.type === ITEM_TYPE.FILE ? options.outputFormat(`./${parsedImportPath.name}`, parsedImportPath.ext) : `./${parsedImportPath.name}`
 
 	const existsWithDifferentExt = findExisting(item.path.match(/(.*)\..*/)![1], filtered, options, false)
 

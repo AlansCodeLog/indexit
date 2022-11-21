@@ -19,6 +19,7 @@ enum ALIASES {
 	ORDER = "O",
 	SORT = "S",
 	WILDCARD = "w",
+	OUTPUT_FORMAT = "o",
 }
 
 const IS_TESTING = process.env?.NODE_ENV === "test"
@@ -42,7 +43,7 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 	let promise: Promise<void | string[][]> | undefined
 
 	// Note: Doing yargs(args ? args : process.argv) won't work. Not 100% sure why.
-	// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+	// eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/no-floating-promises
 	;(args ? yargs(args) : yargs)
 		.scriptName("indexit")
 		.usage("Usage: $0 <command> [options]")
@@ -99,6 +100,13 @@ function addOptions(yargs: yargs.Argv<Options>): void {
 			type: "string",
 			default: "",
 			description: "Determines the end of the managed index. If nothing is passed, it's assumed you want the end to be the end of the file.",
+		})
+		.option("output-format", {
+			alias: ALIASES.OUTPUT_FORMAT,
+			type: "string",
+			default: undefined,
+			// eslint-disable-next-line no-template-curly-in-string
+			description: "Allows changing how the import path will look. Useful for esm modules. For example: `--output-format \"${path}.${ext}\"`, or in the case of typescript you might need to force 'js' extensions: `--output-format \"${path}.js\"`. String must be a valid template string. You can also pass a function if needed: `--output-format \"(path, ext) => `${path}.${ext}`\"`",
 		})
 		.option("wildcard-exports", {
 			alias: ALIASES.WILDCARD,

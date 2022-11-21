@@ -1,4 +1,3 @@
-import { testName } from "@utils/testing"
 import { expect } from "chai"
 import glob from "fast-glob"
 // eslint-disable-next-line no-restricted-imports
@@ -30,12 +29,14 @@ describe("test command (and therefore update) works (in theory)", () => {
 				if (exists) {
 					const expectedContents = (await fs.readFile(expectedFilepath)).toString()
 
-					// filepath is here for debugging purposes, it won't match if the contents don't match so we can quickly find it when debugging
-					expect({ filepath, expectedFilepath, contents }).to.deep.equal({
-						filepath: contents === expectedContents ? filepath : "Ignore, this properties will not error if the contents match.",
-						expectedFilepath: contents === expectedContents ? expectedFilepath : "Ignore, this properties will not error if the contents match.",
-						contents: expectedContents,
-					})
+					const res: any = { contents }
+					const resExpected: any = { contents: expectedContents }
+					if (contents !== expectedContents) {
+						res.filepath = filepath
+						// filepath is here for debugging purposes, it won't match if the contents don't match so we can quickly find it when debugging
+						resExpected.filepath = filepath
+					}
+					expect(res).to.deep.equal(resExpected)
 				}
 			}))
 		}))

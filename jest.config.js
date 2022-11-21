@@ -1,7 +1,6 @@
 // https://jestjs.io/docs/en/configuration.html
 
 
-/** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
 	// this will remove jsdom, which has an issue with node 10 (https://github.com/jsdom/jsdom/issues/2961)
 	// it also makes tests faster
@@ -20,7 +19,9 @@ module.exports = {
 	testMatch: [
 		"**/tests/**/*.spec.(js|ts)|**/__tests__/*.(js|ts)",
 	],
-	testURL: "http://localhost/",
+	testEnvironmentOptions: {
+		url: "http://localhost/",
+	},
 	watchPlugins: [
 		"jest-watch-typeahead/filename",
 		"jest-watch-typeahead/testname",

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { pretty } from "@utils/utils"
 
 import { EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, Options, SORT_MAIN, SORT_ORDER_NAME, SortEntry } from "@/types"

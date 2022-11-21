@@ -11,6 +11,7 @@ module.exports = {
 	ignorePatterns: [
 		"coverage",
 		"bin",
+		"tests",
 	],
 	rules: {
 	},

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { keys } from "@utils/retypes"
 import type { Keys } from "@utils/types"
 import path from "path"
@@ -91,7 +90,6 @@ export function getUpdatedContents(indexes: Index, options: Options): ProcessedI
 		if (entry.exportAs.includes(EXPORT_TYPE.DEFAULT)) {
 			contents.default.push("}")
 		}
-		// TODO not sure why keys isn't typing this correctly, it should
 		(keys(contents) as Keys<typeof contents>).forEach(_ => {
 			if (contents[_][contents[_].length - 1] === flexibleLine) contents[_].splice(contents[_].length - 1, 1)
 			contents[_] = contents[_].map((line, i) =>
