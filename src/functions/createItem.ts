@@ -80,7 +80,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 	const contents = (await fs.readFile(item.path)).toString()
 	// detects manual named exports
 	// https://regexr.com/4s9ol
-	contents.replace(/^export (?:async )?(type|interface|namespace|class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|:|<|\(|\s)/m, (match: string, groupType: string, groupName: string) => {
+	contents.replace(/^export (?:async )?(enum|type|interface|namespace|class|const|function|let|default (?:function|class)(?!\s*?\()|default (?!(?:function\s*?\(|class\s*?\{)))(?!\n)\s*?((?!\{)\S+?)($|:|<|\(|\s)/m, (match: string, groupType: string, groupName: string) => {
 		const type = groupType.trim()
 		if (item.type !== ITEM_TYPE.FOLDER) {
 			item.name = groupName.trim()
@@ -89,7 +89,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 		if (type.includes("default")) {
 			pushIfNotIn(item.exportedAs, EXPORTED_TYPE.DEFAULT)
 		} else {
-			pushIfNotIn(item.exportedAs, type === "type" || type === "interface"
+			pushIfNotIn(item.exportedAs, type === "type" || type === "interface" || type === "enum"
 				? EXPORTED_TYPE.TYPES
 				: EXPORTED_TYPE.NAMED)
 		}
