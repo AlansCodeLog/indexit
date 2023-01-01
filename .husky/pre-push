@@ -1,6 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "Runnin pre-push hook"
+echo "Running pre-push hook"
 
+# TOCONFIGURE
 npm run lint:commits

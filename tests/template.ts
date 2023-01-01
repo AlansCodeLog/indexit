@@ -1,5 +1,5 @@
-import { testName } from "@utils/testing"
-import { expect } from "chai"
+import { testName } from "@alanscodelog/utils"
+import { describe, expect, it } from "vitest"
 
 
 describe(testName(), () => {

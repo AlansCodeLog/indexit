@@ -1,29 +1,29 @@
 // https://www.typescriptlang.org/tsconfig/
 {
 	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
-	// https://github.com/AlansCodeLog/my-tsconfigs
+	// https://github.com/AlansCodeLog/tsconfigs
 	"extends": "@alanscodelog/tsconfigs",
-		"compilerOptions": {
-		"baseUrl": ".",
+	"compilerOptions": {
+		"outDir": "bin",
+		"baseUrl": "./src",
 		"paths": {
-			"@/*": [ "src/*" ],
-			"@utils/*": [ "node_modules/@alanscodelog/utils/dist/*" ],
-			"@tests/*": ["tests/*"],
 		},
+		"types": [ "node" ],
+		// the libs are explicitly specified because otherwise typescript includes the dom by default
+		"lib": [ "esnext" ]
 	},
-	"types" : [
-		"node",
-		"jest",
-	],
-	"lib": [
-		"esnext",
-	],
 	"include": [
 		"src/**/*.ts",
-		"tests/*.ts",
+		"src/**/*.js",
+		"src/**/*.vue",
+		"tests/*.ts", //on purpose, we don't want to include fixtures
+		// so eslint doesn't bother us, we don't build with tsc anyways, and to emit types, there's tsconfig.types.json
+		"*.ts",
+		"*.cjs",
+		"*.js"
 	],
-	"exclude": [
-		"node_modules",
-		"tests/fixtures/**/*.ts",
-	]
+	"exclude": [],
+	"tsc-alias": {
+		"resolveFullPaths": true // for esm compatibility
+	}
 }

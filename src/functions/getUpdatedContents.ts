@@ -1,9 +1,6 @@
-import { keys } from "@utils/retypes"
-import type { Keys } from "@utils/types"
+import { type Keys, keys } from "@alanscodelog/utils"
 import path from "path"
-
-import { EXPORT_TYPE, EXPORTED_TYPE, Index, ITEM_TYPE, Options, ProcessedItems } from "@/types"
-
+import { type Index, type Options, type ProcessedItems, EXPORT_TYPE, EXPORTED_TYPE, ITEM_TYPE } from "types.js"
 
 /**
  * For each entry in the index, generates the updated contents and returns them all along with where they should be written.

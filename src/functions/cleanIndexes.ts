@@ -1,6 +1,5 @@
-import { pretty } from "@utils/utils"
-
-import { EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, Options, SORT_MAIN, SORT_ORDER_NAME, SortEntry } from "@/types"
+import { pretty } from "@alanscodelog/utils"
+import { EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, Options, SORT_MAIN, SORT_ORDER_NAME, SortEntry } from "types.js"
 
 
 /** Removes empty indexes and sorts each entry's items so they'll be exported in alphabetical order by their name. */

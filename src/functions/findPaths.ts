@@ -1,6 +1,5 @@
 import glob from "fast-glob"
-
-import type { Options } from "@/types"
+import type { Options } from "types.js"
 
 /**
  * Returns all the files matching the glob.

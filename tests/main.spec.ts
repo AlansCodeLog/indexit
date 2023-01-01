@@ -1,10 +1,8 @@
-import { expect } from "chai"
 import glob from "fast-glob"
-// eslint-disable-next-line no-restricted-imports
 import fsSync, { promises as fs } from "fs"
+import { indexit } from "index.js"
 import path from "path"
-
-import { indexit } from "@/index"
+import { describe, expect, it } from "vitest"
 
 
 describe("test command (and therefore update) works (in theory)", () => {

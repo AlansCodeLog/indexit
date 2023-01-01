@@ -3,88 +3,76 @@
 	"description": "A small cli app for managing (auto-filling) javascript/typescript index files.",
 	"version": "0.0.0-semantically-released",
 	"bin": "bin/index.js",
+	"type": "module",
 	"scripts": {
-		"babel:run": "babel-node --extensions \".ts,.js\" --",
+		"debug": "ts-node -r tsconfig-paths/register -T --esm",
 
-		"build:babel": "babel --extensions \".ts,.js\" src --out-dir bin --source-maps inline",
-		"build:watch": "npm run build:babel -- --watch",
-		"build:clean": "rm -rf bin && npm run build",
-		"build": "npm run build:babel && npm run build:shebang",
+		"-build": "vite build",
+		"-build:dev": "vite build --mode development",
+		"-build:watch": "vite build --watch --mode production",
+		"-build:types": "tsc -p tsconfig.types.json && npm run build:types:fix",
+		"-build:types:fix": "tsc-alias -p tsconfig.types.json --debug",
+
+		"build": "tsc -p tsconfig.build.json && npm run build:types:fix && npm run build:shebang",
+		"build:types:fix": "tsc-alias -p tsconfig.build.json --debug",
 		"build:shebang": "node -e \"const fs = require('fs'); fs.writeFileSync('./bin/index.js', '#!/usr/bin/env node\\n' + fs.readFileSync('./bin/index.js'))\"",
 
-		"lint:eslint": "eslint \"{src,tests}/**/*.{js,ts}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
+
+		"lint:eslint": "eslint \"{src,bin,tests}/**/*.{cjs,js,ts}\" \"*.{cjs,js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "tsc --noEmit --pretty",
 		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
+		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "npm run lint:types && npm run lint:eslint",
+		"coverage": "vitest --coverage",
+		"coverage:dev": "vitest --watch --coverage",
 
-		"coverage": "npm run test -- --coverage",
-		"coverage:dev": "http-server coverage/lcov-report --port=5000 & onchange -k -i \"jest.config.js\" --  npm run coverage -- --watch",
-
-		"test": "jest test --verbose",
-		"test:debug": "node --inspect-brk node_modules/jest/bin/jest test --verbose",
-		"test:inspect-errors": "set INSPECT_ERRORS=true && test",
-
-		"indexit": "npm run babel:run src/index.ts --",
-		"gen:exports": "npm run indexit update",
+		"test": "npm run lint:types && vitest run",
+		"test:watch": "vitest --watch",
+		"test:inspect-errors": "cross-env INSPECT_ERRORS=true npm run test",
 
 		"actions:debug": "act -r -v -j build-only",
-
-		"prepare": "npm run build && husky installs"
+		"gen:exports": "indexit update -o '${path}.js' -i src/index.ts",
+		"prepare": "husky install && npm run build"
 	},
 	"dependencies": {
-		"@alanscodelog/utils": "^3.2.0",
+		"@alanscodelog/utils": "4.0.0-beta.1",
 		"fast-glob": "^3.2.12",
 		"yargs": "^17.6.2",
-
-		"core-js": "^3.26.1"
+		"core-js":"^3.27.1"
 	},
 	"devDependencies": {
-		"@types/node": "17.0.34",
-
-		"semantic-release": "^19.0.2",
-		"@semantic-release/changelog": "^6.0.1",
-		"@semantic-release/commit-analyzer": "^9.0.2",
-		"@semantic-release/github": "^8.0.4",
-		"@semantic-release/npm": "^9.0.1",
-		"@semantic-release/release-notes-generator": "^10.0.3",
-		"conventional-changelog-conventionalcommits": "^4.6.3",
-		"@alanscodelog/semantic-release-config": "^2.0.0",
 		"@alanscodelog/commitlint-config": "^2.0.0",
-		"commitlint": "^17.0.0",
-
-		"@babel/cli": "^7.17.10",
-		"@babel/core": "^7.17.12",
-		"@babel/node": "^7.17.10",
-		"@babel/preset-env": "^7.17.12",
-		"@babel/preset-typescript": "^7.17.12",
-		"@babel/plugin-proposal-export-namespace-from": "^7.17.12",
-		"@babel/plugin-proposal-class-properties": "^7.17.12",
-		"babel-plugin-module-resolver": "^4.1.0",
-		"@alanscodelog/babel-preset": "^2.0.0",
-
-		"eslint": "^8.28.0",
+		"@alanscodelog/eslint-config": "4.0.0",
+		"@alanscodelog/semantic-release-config": "^2.0.1",
+		"@alanscodelog/tsconfigs": "^3.1.2",
+		"@babel/core": "^7.20.7",
+		"@babel/plugin-transform-runtime": "^7.19.6",
+		"@babel/preset-env": "^7.20.2",
+		"@babel/runtime": "^7.20.7",
+		"@rollup/plugin-babel": "^6.0.3",
+		"@types/node": "18.11.18",
+		"@types/yargs": "^17.0.18",
+		"@typescript-eslint/eslint-plugin": "^5.47.1",
+		"@typescript-eslint/parser": "^5.47.1",
+		"@vitest/coverage-c8": "^0.26.2",
+		"@vue/eslint-config-typescript": "^11.0.2",
+		"commitlint": "^17.3.0",
+		"concurrently": "^7.6.0",
+		"cross-env": "^7.0.3",
 		"eslint-import-resolver-typescript": "^3.5.2",
 		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-jsdoc": "^39.6.4",
 		"eslint-plugin-simple-import-sort": "^8.0.0",
-		"eslint-plugin-jsdoc": "^39.6.2",
-		"@typescript-eslint/eslint-plugin": "^5.43.0",
-		"@typescript-eslint/parser": "^5.43.0",
-		"@alanscodelog/eslint-config": "3.0.2",
-
-		"chai": "^4.3.6",
-		"jest": "^28.1.0",
-		"babel-jest": "^28.1.0",
-		"jest-watch-typeahead": "^1.1.0",
-		"@types/chai": "^4.3.1",
-		"@types/jest": "^27.5.1",
-		"@types/yargs": "^17.0.13",
-
-		"typescript": "^4.9.3",
-		"@alanscodelog/tsconfigs": "^3.0.0",
-
-		"husky": "^8.0.1",
+		"eslint": "^8.31.0",
+		"http-server": "^14.1.1",
+		"husky": "^8.0.2",
 		"onchange": "^7.1.0",
-		"http-server": "^14.1.0"
+		"semantic-release": "^19.0.5",
+		"tsc-alias":"^1.8.2",
+		"typescript": "^4.9.4",
+		"vite-tsconfig-paths": "^4.0.3",
+		"vite": "^4.0.3",
+		"vitest": "^0.26.2"
 	},
 	"author": "Alan <alanscodelog@gmail.com>",
 	"repository": "https://github.com/alanscodelog/indexit",
@@ -93,14 +81,13 @@
 		"src",
 		"bin"
 	],
-	"eslintIgnore": ["tests/fixtures/**"],
 	"release": { "extends": [ "@alanscodelog/semantic-release-config" ] },
 	"commitlint": { "extends": [ "@alanscodelog" ] },
-	"babel": { "presets": [ "@alanscodelog" ] },
 	"browserslist": "maintained node versions",
 	"engines": { "node": ">=14.0.0" },
 	"@comments": {
 		"scripts": {
+			"test": "Runs `lint:types` before (so that flags can be passed to the test command) so that we can test type assertions. See expect_type function in @alanscod elog/utils.",
 			"lint:commits": "Lints all unpushed commits in the active branch.",
 			"test:inspect-errors":"For use with my inspectError utility function from @alanscodelog/utils",
 			"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",

@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import yargs from "yargs"
-
-import { main } from "@/main"
-import { Options, TEST_TYPE } from "@/types"
+import { main } from "main.js"
+import { TEST_TYPE } from "types.js"
+import yargs, { Argv, Options } from "yargs"
 
 
 // careful, don't move, these must be defined before we call indexit and typescript doesn't seem to warn against it and errors at runtime
@@ -44,7 +43,7 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 
 	// Note: Doing yargs(args ? args : process.argv) won't work. Not 100% sure why.
 	// eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/no-floating-promises
-	;(args ? yargs(args) : yargs)
+	; (args ? yargs(args) : yargs(process.argv.slice(2)))
 		.scriptName("indexit")
 		.usage("Usage: $0 <command> [options]")
 		.demandCommand(1)
@@ -61,15 +60,15 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 			yargs => { promise = main({ testing: IS_TESTING, type: TEST_TYPE.TEST }, testReturn)(yargs as any) },
 		)
 		.help()
+		.parserConfiguration({
+			"short-option-groups": false,
+			"camel-case-expansion": false,
+			"dot-notation": true,
+			"parse-numbers": false,
+			"boolean-negation": true,
+		})
 		.argv
 
-	yargs.parserConfiguration({
-		"short-option-groups": false,
-		"camel-case-expansion": false,
-		"dot-notation": true,
-		"parse-numbers": false,
-		"boolean-negation": true,
-	})
 	if (promise) await promise
 
 	if (testReturn.value) return testReturn.value
@@ -77,7 +76,7 @@ export async function indexit(args?: string[]): Promise<void | string[][]> {
 
 
 /** Adds shared options. */
-function addOptions(yargs: yargs.Argv<Options>): void {
+function addOptions(yargs: Argv<Options>): void {
 	yargs
 		.positional("globs", {
 			default: ["src/**", "src/"],

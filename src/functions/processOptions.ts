@@ -1,6 +1,5 @@
 import type { ErrorW } from "@alanscodelog/utils"
-
-import { EXPORT_TYPE, ExtraOptions, ITEM_TYPE, Options, RawOptions, SORT_MAIN, SORT_ORDER_NAME } from "@/types"
+import { EXPORT_TYPE, ExtraOptions, ITEM_TYPE, Options, RawOptions, SORT_MAIN, SORT_ORDER_NAME } from "types.js"
 
 
 /**
@@ -53,7 +52,6 @@ export function processOptions(yargs: RawOptions<Options>, extra: ExtraOptions):
 		yargs.force = `.${yargs.force}`
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let outputFormat = (path: string, _ext: string): string => path
 	if (yargs["output-format"] !== undefined) {
 		let func: any

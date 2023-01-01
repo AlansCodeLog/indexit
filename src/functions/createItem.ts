@@ -1,9 +1,8 @@
-import { escapeRegex, pushIfNotIn } from "@utils/utils"
+import { escapeRegex, pushIfNotIn } from "@alanscodelog/utils"
 import { promises as fs } from "fs"
+import { isFolder } from "helpers/isFolder.js"
 import path from "path"
-
-import { isFolder } from "@/helpers"
-import { DeepPartialObj, EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, OnlyRequire, Options } from "@/types"
+import { DeepPartialObj, EXPORT_TYPE, EXPORTED_TYPE, Index, Item, ITEM_TYPE, OnlyRequire, Options } from "types.js"
 
 
 /** Returns the path of an known index if it exists. Prioritizes finding an existing path inside known indexes according to the options path (in particular `extension` and `force`). */
@@ -113,9 +112,7 @@ export async function createItem(options: Options, knownIndexes: string[], filte
 
 	if (item.type === ITEM_TYPE.FOLDER) {
 		const dir = item.path
-		if (!indexes[dir]) {
-			indexes[dir] = { items: [], exportAs: [], contents } as any
-		}
+		indexes[dir] ??= { items: [], exportAs: [], contents } as any
 
 		const entry = indexes[dir]!
 		entry.contents = contents

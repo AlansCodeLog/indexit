@@ -1,6 +1,7 @@
-import { cleanIndexes, createItem, findPaths, getUpdatedContents, processOptions, writeOrLogDependingOn } from "@/functions"
-import { pushToParent, removeIndexFilesTo } from "@/helpers"
-import type { ExtraOptions, Index, Options, RawOptions } from "@/types"
+/* eslint-disable no-restricted-imports */ /* There's not much risk of circular deps here. */
+import { cleanIndexes, createItem, findPaths, getUpdatedContents, processOptions, writeOrLogDependingOn } from "functions/index.js"
+import { pushToParent, removeIndexFilesTo } from "helpers/index.js"
+import type { ExtraOptions, Index, Options, RawOptions } from "types.js"
 
 
 export const main = (extraOptions: ExtraOptions, testReturn: { value: any }) => async (yargs: RawOptions<Options>) => {

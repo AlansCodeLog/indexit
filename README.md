@@ -154,6 +154,8 @@ export * as typeFile from ".typeFile"
 
 The program also provides a few other useful options to control the output (e.g. `--sort`, `--spaces`, `--newlines`, etc). Run `indexit test --help` for details.
 
+For esm exports, you can use `-o '{path}.js'` to force `.js` file endings even in typescript.
+
 ## How it Works
 
 After an index file with a header is found, it looks at all sibling files:
@@ -168,7 +170,7 @@ Note how almost everything has a "name" one way or another.
 
 ## Other
 
-I have taken care that `async`, typescript generic function names, and any weird characters in function names are correctly identified, though there might still be more cases that don't work.
+I have taken care that `async`, typescript generic function names, and any weird characters in function names are correctly identified, though there might still be more cases that don't work. Ideally in the future, a parser will be used.
 
 Currently the following regex is used to extract the portion with the name: https://regexr.com/4s9ol (you can see the names by using the list and inputting `$2\n`).
 
@@ -179,3 +181,4 @@ Currently the following regex is used to extract the portion with the name: http
 - [ ] Option when using test to only print out the parts between the start/end tags.
 - [ ] Tests for sort/order and formatting options.
 - [ ] Tests for start/end tag handling.
+- [ ] Switch to using a parser instead of regex.

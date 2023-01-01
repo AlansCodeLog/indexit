@@ -1,6 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "Runnin pre-commit hook"
+echo "Running pre-commit hook"
 
-npm run build && npm run lint && npm run test -- --no-cache
+# TOCONFIGURE
+npm run build && npm run lint && npm run test

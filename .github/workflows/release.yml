@@ -1,14 +1,14 @@
 name: Release
 
 env:
-  USE_LOCKFILE: false
+  USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+  ENABLE_RELEASE: ${{ secrets.ENABLE_RELEASE }}
 
 on:
   push:
     branches: [ master, alpha, beta ]
   repository_dispatch:
     types: [ release ]
-    # to trigger: curl -v -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/alanscodelog/indexit/dispatches -d '{ "event_type": "release" }'
 
 jobs:
   release:
@@ -16,9 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # awaiting https://github.com/actions/setup-node/issues/26 so we can just set this to [lts]
-        # ideally we would trigger a release if the build succeeds on both node versions, need to research #future
-        node-version: [14.x]
+        node-version: ["lts/-2"]
 
     steps:
 
@@ -26,7 +24,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Setting Up Node.js (${{ matrix.node-version }})
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -37,13 +35,11 @@ jobs:
         version: latest
 
     - name: Get Pnpm Cache Path
-      if: "env.USE_LOCKFILE == 'true'"
       id: pnpm-cache
       run: |
         echo "::set-output name=dir::$(pnpm store path)"
 
     - uses: actions/cache@v3
-      if: "env.USE_LOCKFILE == 'true'"
       name: pnpm cache
       with:
         path: ${{ steps.pnpm-cache.outputs.dir }}
@@ -61,7 +57,7 @@ jobs:
       if: "env.USE_LOCKFILE == 'true'"
 
     - run: pnpm install
-      if: "env.USE_LOCKFILE == 'false'"
+      if: "env.USE_LOCKFILE != 'true'"
 
     - run: pnpm build
 
@@ -70,8 +66,12 @@ jobs:
     - run: pnpm test
 
     - name: Release
+      if: "env.ENABLE_RELEASE == 'true'"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npx semantic-release
+
+    - run: echo "env.ENABLE_RELEASE is ${{ env.ENABLE_RELEASE }}, no release can be published" && exit 1
+      if: "env.ENABLE_RELEASE != 'true'"
     # regionend

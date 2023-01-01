@@ -1,0 +1,11 @@
+// https://www.typescriptlang.org/tsconfig/
+{
+	"extends": "./tsconfig.types",
+	"compilerOptions": {
+		"emitDeclarationOnly": false,
+		"noEmit": false
+	},
+	"include": [
+		"src/**/*.ts"
+	]
+}

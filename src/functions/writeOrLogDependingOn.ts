@@ -1,6 +1,6 @@
 import { promises as fs } from "fs"
+import { type Options, type ProcessedItems, TEST_TYPE } from "types.js"
 
-import { Options, ProcessedItems, TEST_TYPE } from "@/types"
 
 /**
  * Takes care of either logging or actually writing the files, depending on the options.
